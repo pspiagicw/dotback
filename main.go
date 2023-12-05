@@ -2,7 +2,7 @@ package main
 
 import (
 	"github.com/pspiagicw/dotback/pkg/argparse"
-	"github.com/pspiagicw/dotback/pkg/handler"
+	"github.com/pspiagicw/dotback/pkg/handle"
 )
 
 var VERSION string

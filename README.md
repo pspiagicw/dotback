@@ -10,7 +10,7 @@ Assuming this as a example config for `dotback`.
 
 ```toml
 
-backupLocation = "~/.local/state/backup"
+storeDir = "~/.local/state/backup"
 
 [backup.nvim]
 location = "~/.config/nvim"

@@ -3,13 +3,14 @@ package argparse
 import (
 	"flag"
 
-	"github.com/pspiagicw/dotback/pkg/helper"
+	"github.com/pspiagicw/dotback/pkg/help"
+	"github.com/pspiagicw/goreland"
 )
 
 func ParseArguments(version string) []string {
 
 	Usage := func() {
-		helper.PrintHelp(version)
+		help.PrintHelp(version)
 	}
 	flag.Usage = Usage
 	flag.Parse()
@@ -17,7 +18,8 @@ func ParseArguments(version string) []string {
 	args := flag.Args()
 
 	if len(args) == 0 {
-		helper.PrintHelp(version)
+		help.PrintHelp(version)
+		goreland.LogFatal("No commands provided!")
 	}
 
 	return args
