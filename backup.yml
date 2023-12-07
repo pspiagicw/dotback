@@ -1,0 +1,34 @@
+storeDir = "~/.local/state/backup"
+after-backup = [
+  "scp -r /home/pspiagicw/.local/state/backup personal:/mnt/backup"
+]
+
+[backup.nvim]
+location = "~/.config/nvim"
+
+[backup.neomutt]
+location = "~/.config/neomutt"
+
+[backup.gitconfig]
+location = "~/.gitconfig"
+
+[backup.wezterm]
+location = "~/.config/wezterm"
+
+[backup.tmux]
+location = "~/.config/tmux"
+
+[backup.newsboat]
+location = "~/.config/newsboat"
+
+[backup.gpg-keys]
+location = "~/.gnupg"
+
+[backup.ssh]
+location = "~/.ssh"
+
+[backup.password-store]
+location = "~/.password-store"
+
+[backup.bashrc]
+location = "~/.bashrc"
