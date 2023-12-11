@@ -26,7 +26,7 @@ Assuming this as a example config for `dotback`.
 storeDir = "~/.local/state/backup"
 after-backup = [
     "scp -r ...",
-    "rsync ...."
+    "rsync ....",
     "tar -xvzf ..."
 ]
 

@@ -19,7 +19,7 @@ func HandleArgs(args []string, version string) {
 
 	handler, exists := handlers[cmd]
 	if exists {
-		handler(args)
+		handler(args[1:])
 	} else {
 		help.PrintHelp(version)
 		goreland.LogFatal("No command named %s", cmd)

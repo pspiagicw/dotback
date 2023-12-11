@@ -22,11 +22,15 @@ func PrintHelp(version string) {
 	commands := `
 backup:
 version:
-help:`
+help:
+restore:
+`
 	messages := `
 Backup your dotfiles
 Show version info
-Show this message`
+Show this message
+Restore the backup
+`
 
 	commandCol := lipgloss.NewStyle().Align(lipgloss.Left).SetString(commands).MarginLeft(2).String()
 	messageCol := lipgloss.NewStyle().Align(lipgloss.Left).SetString(messages).MarginLeft(5).String()
