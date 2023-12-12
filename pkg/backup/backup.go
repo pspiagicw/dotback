@@ -3,6 +3,7 @@ package backup
 import (
 	"path/filepath"
 
+	"github.com/AlecAivazis/survey/v2"
 	"github.com/kballard/go-shellquote"
 	"github.com/pspiagicw/dotback/pkg/config"
 	"github.com/pspiagicw/goreland"
@@ -22,6 +23,14 @@ func PerformBackup(args []string) {
 	goreland.LogSuccess("Backup successful!")
 }
 func preBackup() *config.Config {
+	confirm := false
+	prompt := &survey.Confirm{
+		Message: "Do you want to start the backup ?",
+	}
+	survey.AskOne(prompt, &confirm)
+	if !confirm {
+		goreland.LogFatal("User cancelled the backup!")
+	}
 
 	configFile := config.GetConfig()
 	storePath := expandHome(configFile.StoreDir)
@@ -61,6 +70,14 @@ func backupAll(configFile *config.Config) {
 	}
 }
 func runAfterBackup(configfile *config.Config) {
+	confirm := false
+	prompt := survey.Confirm{
+		Message: "Run the after-backup procedure ?",
+	}
+	survey.AskOne(&prompt, &confirm)
+	if !confirm {
+		goreland.LogFatal("User cancelled the after-backup procedure")
+	}
 	for _, cmd := range configfile.AfterBackup {
 
 		args, err := shellquote.Split(cmd)
