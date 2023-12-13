@@ -29,9 +29,9 @@ restore:
 	messages := `
 Backup your dotfiles
 Show version info
+Print the current config
 Show this message
 Restore the backup
-Print the current config
 `
 
 	commandCol := lipgloss.NewStyle().Align(lipgloss.Left).SetString(commands).MarginLeft(2).String()
@@ -47,4 +47,21 @@ Print the current config
 	fmt.Println("EXAMPLES")
 	fmt.Println("  $ dotback backup")
 	fmt.Println()
+}
+func HelpArgs(args []string, version string) {
+	if len(args) == 0 {
+		PrintHelp(version)
+		return
+	}
+	cmd := args[0]
+
+	handlers := map[string]func(){}
+
+	handlerFunc, exists := handlers[cmd]
+	if exists {
+		handlerFunc()
+	} else {
+		goreland.LogFatal("No help for command %s found", cmd)
+	}
+
 }

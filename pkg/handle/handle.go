@@ -16,7 +16,9 @@ func HandleArgs(args []string, version string) {
 		},
 		"backup": backup.PerformBackup,
 		"config": config.PrintConfig,
-		"help":   notImplemented,
+		"help": func(args []string) {
+			help.HelpArgs(args, version)
+		},
 	}
 
 	handler, exists := handlers[cmd]
