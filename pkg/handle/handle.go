@@ -2,6 +2,7 @@ package handler
 
 import (
 	"github.com/pspiagicw/dotback/pkg/backup"
+	"github.com/pspiagicw/dotback/pkg/config"
 	"github.com/pspiagicw/dotback/pkg/help"
 	"github.com/pspiagicw/goreland"
 )
@@ -14,6 +15,7 @@ func HandleArgs(args []string, version string) {
 			help.PrintVersion(version)
 		},
 		"backup": backup.PerformBackup,
+		"config": config.PrintConfig,
 		"help":   notImplemented,
 	}
 

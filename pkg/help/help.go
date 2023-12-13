@@ -22,6 +22,7 @@ func PrintHelp(version string) {
 	commands := `
 backup:
 version:
+config:
 help:
 restore:
 `
@@ -30,6 +31,7 @@ Backup your dotfiles
 Show version info
 Show this message
 Restore the backup
+Print the current config
 `
 
 	commandCol := lipgloss.NewStyle().Align(lipgloss.Left).SetString(commands).MarginLeft(2).String()
