@@ -21,7 +21,7 @@ type Config struct {
 }
 
 func getConfigPath() string {
-	location, err := xdg.ConfigFile("dotback/backup.yml")
+	location, err := xdg.ConfigFile("dotback/backup.toml")
 	if err != nil {
 		goreland.LogFatal("Error getting config filepath: %q", err)
 	}

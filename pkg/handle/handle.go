@@ -19,6 +19,7 @@ func HandleArgs(args []string, version string) {
 		"help": func(args []string) {
 			help.HelpArgs(args, version)
 		},
+		"restore": notImplemented,
 	}
 
 	handler, exists := handlers[cmd]

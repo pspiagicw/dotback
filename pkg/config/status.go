@@ -7,7 +7,7 @@ import (
 )
 
 func PrintConfig(args []string) {
-	fmt.Println("Dotback config")
+	fmt.Println("DOTBACK CONFIG")
 	config := GetConfig()
 	fmt.Printf("Location dir: %s\n", config.StoreDir)
 	printAfterBackup(config)
