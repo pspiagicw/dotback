@@ -41,14 +41,12 @@ func printCommands() {
 backup:
 version:
 config:
-help:
-restore:`
+help:`
 	messages := `
 Backup your dotfiles
 Show version info
 Print the current config
-Show this message
-Restore the backup`
+Show this message`
 	printAligned(commands, messages)
 	fmt.Println()
 }
