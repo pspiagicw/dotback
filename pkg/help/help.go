@@ -10,43 +10,56 @@ import (
 func PrintVersion(version string) {
 	fmt.Printf("dotback version %s\n", version)
 }
-
-func PrintHelp(version string) {
-	goreland.LogInfo("dotback version: %s", version)
+func printHeader() {
 	fmt.Println("Backup dotfiles the simple way!")
 	fmt.Println()
 	fmt.Println("USAGE")
 	fmt.Println("  dotback [command] [args]")
 	fmt.Println()
+
+}
+
+func PrintHelp(version string) {
+	PrintVersion(version)
+	printHeader()
+	printCommands()
+
+	fmt.Println("EXAMPLES")
+	fmt.Println("  $ dotback backup")
+	fmt.Println()
+
+	printFooter()
+}
+
+func printFooter() {
+	fmt.Println("MORE HELP")
+	fmt.Println("  Use 'dotback help [command]' for more info about a command.")
+}
+func printCommands() {
 	fmt.Println("COMMANDS")
 	commands := `
 backup:
 version:
 config:
 help:
-restore:
-`
+restore:`
 	messages := `
 Backup your dotfiles
 Show version info
 Print the current config
 Show this message
-Restore the backup
-`
+Restore the backup`
+	printAligned(commands, messages)
+	fmt.Println()
+}
+func printAligned(left, right string) {
+	leftCol := lipgloss.NewStyle().Align(lipgloss.Left).SetString(left).MarginLeft(2).String()
+	rightCol := lipgloss.NewStyle().Align(lipgloss.Left).SetString(right).MarginLeft(5).String()
 
-	commandCol := lipgloss.NewStyle().Align(lipgloss.Left).SetString(commands).MarginLeft(2).String()
-	messageCol := lipgloss.NewStyle().Align(lipgloss.Left).SetString(messages).MarginLeft(5).String()
-
-	fmt.Println(lipgloss.JoinHorizontal(lipgloss.Bottom, commandCol, messageCol))
+	fmt.Println(lipgloss.JoinHorizontal(lipgloss.Bottom, leftCol, rightCol))
 
 	fmt.Println()
-	fmt.Println("MORE HELP")
-	fmt.Println("  Use 'dotback help [command]' for more info about a command.")
 
-	fmt.Println()
-	fmt.Println("EXAMPLES")
-	fmt.Println("  $ dotback backup")
-	fmt.Println()
 }
 func HelpArgs(args []string, version string) {
 	if len(args) == 0 {
@@ -55,7 +68,13 @@ func HelpArgs(args []string, version string) {
 	}
 	cmd := args[0]
 
-	handlers := map[string]func(){}
+	handlers := map[string]func(){
+		"backup": HelpBackup,
+		"config": HelpConfig,
+		"version": func() {
+			PrintVersion(version)
+		},
+	}
 
 	handlerFunc, exists := handlers[cmd]
 	if exists {

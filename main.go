@@ -5,7 +5,7 @@ import (
 	"github.com/pspiagicw/dotback/pkg/handle"
 )
 
-var VERSION string
+var VERSION string = "unversioned"
 
 func main() {
 	args := argparse.ParseArguments(VERSION)

@@ -1,12 +1,23 @@
 package config
 
 import (
+	"flag"
 	"fmt"
 
+	"github.com/pspiagicw/dotback/pkg/help"
 	"github.com/pspiagicw/goreland"
 )
 
+func parseConfigArgs(args []string) {
+	flag := flag.NewFlagSet("dotback config", flag.ExitOnError)
+
+	flag.Usage = help.HelpConfig
+
+	flag.Parse(args)
+}
+
 func PrintConfig(args []string) {
+	parseConfigArgs(args)
 	fmt.Println("DOTBACK CONFIG")
 	config := GetConfig()
 	fmt.Printf("Location dir: %s\n", config.StoreDir)
