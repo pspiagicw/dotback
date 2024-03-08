@@ -4,6 +4,21 @@ This tool is used to backup your dotfiles.
 
 Instead of making confusing and outright dangerous symlinks, this simply backs up your dotfiles using a `toml` file.
 
+<!-- TOC start (generated with https://github.com/derlin/bitdowntoc) -->
+
+- [`dotback`](#dotback)
+   * [Features](#features)
+   * [Configuration](#configuration)
+   * [Usage](#usage)
+      + [Backup](#backup)
+   * [Unix philosophy](#unix-philosophy)
+   * [It does not](#it-does-not)
+   * [It does](#it-does)
+   * [Installation](#installation)
+   * [Contribution](#contribution)
+
+<!-- TOC end -->
+
 ## Features
 
 - A single binary, no runtime environments or large dependencies.
