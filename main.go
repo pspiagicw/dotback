@@ -8,6 +8,6 @@ import (
 var VERSION string = "unversioned"
 
 func main() {
-	args := argparse.ParseArguments(VERSION)
-	handler.HandleArgs(args, VERSION)
+	opts := argparse.ParseArguments(VERSION)
+	handler.HandleArgs(opts)
 }

@@ -1,6 +1,6 @@
 # `dotback`
 
-This tool is used to backup your dotfiles.
+`dotback` backs up your dotfiles.
 
 Instead of making confusing and outright dangerous symlinks, this simply backs up your dotfiles using a `toml` file.
 
@@ -34,25 +34,38 @@ A example file.
 
 ```toml
 
+# A folder to store the backup, it will be created if it does not exist.
 storeDir = "~/.local/state/backup"
+
+# All commands should be defined by the user.
+# It can be left empty or omitted.
+
 after-backup = [
     "scp -r ...",
     "rsync ....",
     "tar -xvzf ..."
 ]
 
+
+# A backup rule has [backup.<rule-name>] format.
+# It should contain a `location` parameter.
 [backup.nvim]
 location = "~/.config/nvim"
 
 [backup.neomutt]
 location = "~/.config/neomutt"
 
+# Backup location can also be a file.
 [backup.gitconfig]
 location = "~/.gitconfig"
 
 ```
 
+</br>
+
 > You can run `dotback config` to get info about the current config.
+
+</br>
 
 ![config](./gifs/config.gif)
 
@@ -60,19 +73,24 @@ location = "~/.gitconfig"
 
 ### Backup
 
-In it's simplest form, running `dotback backup` would backup all the files into a specified folder `storeDir`.
+Simply run `dotback backup` to backup configured in the config file. It would backup everything in `storeDir`.
 
 
-> This ignores `.git` and `.gitignore` files within any backup folder. 
-> This is to avoid any submodules caveats arising if `storeDir` is a git repo already.
+> This ignores `.git` and `.gitignore` files within any backup folder.
+
+</br>
 
 ![demo](./gifs/backup.gif)
 
+</br>
+
 > You can also specify selective rules for backup. This only backs up `nvim`.
 
+</br>
 ```sh
 dotback backup nvim
 ```
+
 > You can provide `--dry-run` flag to not actually backup anything.
 
 ## Unix philosophy

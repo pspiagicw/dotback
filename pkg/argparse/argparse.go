@@ -4,23 +4,27 @@ import (
 	"flag"
 
 	"github.com/pspiagicw/dotback/pkg/help"
-	"github.com/pspiagicw/goreland"
 )
 
-func ParseArguments(version string) []string {
+type Opts struct {
+	ExampleConfig bool
+	Args          []string
+	Version       string
+}
+
+func ParseArguments(version string) *Opts {
+
+	opts := new(Opts)
 
 	Usage := func() {
 		help.PrintHelp(version)
 	}
+	flag.BoolVar(&opts.ExampleConfig, "example-config", false, "Print example config.")
 	flag.Usage = Usage
 	flag.Parse()
 
-	args := flag.Args()
+	opts.Args = flag.Args()
+	opts.Version = version
 
-	if len(args) == 0 {
-		help.PrintHelp(version)
-		goreland.LogFatal("No commands provided!")
-	}
-
-	return args
+	return opts
 }

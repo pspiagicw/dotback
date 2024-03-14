@@ -31,4 +31,7 @@ func HelpConfig() {
 	fmt.Println()
 	fmt.Println("EXAMPLES")
 	fmt.Println("   $ dotback config")
+	fmt.Println()
+	fmt.Println("MORE INFO")
+	fmt.Println("   You can use `dotback --example-config` to get a example config.")
 }

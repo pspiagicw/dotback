@@ -37,7 +37,7 @@ func readConfigFile(filepath string) []byte {
 func assertConfigFile() {
 	_, err := os.Stat(getConfigPath())
 	if errors.Is(err, fs.ErrNotExist) {
-		goreland.LogError("File %s does not exist, yet. Do create one.", getConfigPath())
+		goreland.LogError("The config file '%s' doesn't seem to exist. Create a config to get started", getConfigPath())
 		goreland.LogFatal("Run dotback help config for more information.")
 	}
 }

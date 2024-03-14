@@ -7,8 +7,35 @@ import (
 	"github.com/pspiagicw/goreland"
 )
 
+const EXAMPLE_CONFIG = `
+
+# A folder to store the backup, it will be created if it does not exist.
+storeDir = "~/.local/state/backup"
+
+# All commands should be defined by the user.
+# It can be left empty or omitted.
+after-backup = [
+    "scp -r ...",
+    "rsync ....",
+    "tar -xvzf ..."
+]
+
+[backup.nvim]
+location = "~/.config/nvim"
+
+# A backup rule has [backup.<rule-name>] format.
+# It should contain a 'location' parameter.
+[backup.neomutt]
+location = "~/.config/neomutt"
+
+# Backup location can also be a file.
+[backup.gitconfig]
+location = "~/.gitconfig"
+
+`
+
 func PrintVersion(version string) {
-	fmt.Printf("dotback version %s\n", version)
+	fmt.Printf("dotback version: '%s'\n", version)
 }
 func printHeader() {
 	fmt.Println("Backup dotfiles the simple way!")
@@ -81,4 +108,8 @@ func HelpArgs(args []string, version string) {
 		goreland.LogFatal("No help for command %s found", cmd)
 	}
 
+}
+func HelpExampleConfig() {
+	fmt.Println("EXAMPLE CONFIG")
+	fmt.Println(EXAMPLE_CONFIG)
 }
