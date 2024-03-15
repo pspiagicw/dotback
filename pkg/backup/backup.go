@@ -122,7 +122,7 @@ func executeRule(configFile *config.Config, name string, opts *opts) {
 	src, dest := getPath(configFile, rule)
 
 	if !opts.dryRun {
-		performCopy(src, dest)
+		performCopy(src, dest, configFile.Ignore)
 	} else {
 		goreland.LogInfo("Move %s -> %s", src, dest)
 	}

@@ -18,6 +18,7 @@ type Config struct {
 	StoreDir    string                 `toml:"storeDir"`
 	Rules       map[string]*BackupRule `toml:"backup"`
 	AfterBackup []string               `toml:"after-backup"`
+	Ignore      []string               `toml:"ignore"`
 }
 
 func getConfigPath() string {

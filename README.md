@@ -87,11 +87,20 @@ Simply run `dotback backup` to backup configured in the config file. It would ba
 > You can also specify selective rules for backup. This only backs up `nvim`.
 
 </br>
+
 ```sh
 dotback backup nvim
 ```
 
+> You can also provide `--ignore` flag to ignore selective rules for backup. This ignores `nvim` and `neomutt`.
+
+```sh
+dotback backup --ignore nvim neomutt
+```
+
 > You can provide `--dry-run` flag to not actually backup anything.
+
+
 
 ## Unix philosophy
 
