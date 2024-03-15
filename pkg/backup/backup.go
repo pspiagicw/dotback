@@ -14,12 +14,14 @@ import (
 type opts struct {
 	dryRun bool
 	args   []string
+	ignore bool
 }
 
 func parseBackupOpts(args []string) *opts {
 	opts := new(opts)
 	flag := flag.NewFlagSet("groom backup", flag.ExitOnError)
 	flag.BoolVar(&opts.dryRun, "dry-run", false, "Dry run the backup")
+	flag.BoolVar(&opts.ignore, "ignore", false, "Ignore the backup")
 	flag.Usage = help.HelpBackup
 	flag.Parse(args)
 
@@ -37,6 +39,9 @@ func PerformBackup(args []string) {
 	if len(args) != 0 {
 		backupSelective(configFile, opts)
 	} else {
+		if opts.ignore {
+			goreland.LogFatal("Can't ignore all rules. Please specify the rules to ignore.")
+		}
 		backupAll(configFile, opts)
 
 	}
@@ -68,6 +73,31 @@ func confirmBackup() {
 
 }
 func backupSelective(configFile *config.Config, opts *opts) {
+	if opts.ignore {
+		ignoreRules(configFile, opts)
+	} else {
+		executeSelectiveBackup(configFile, opts)
+	}
+}
+func ignoreRules(configFile *config.Config, opts *opts) {
+	ignoredRules := opts.args
+	for name, _ := range configFile.Rules {
+		if !contains(ignoredRules, name) {
+			executeRule(configFile, name, opts)
+		} else {
+			goreland.LogInfo("Ignoring the [%s] backup", name)
+		}
+	}
+}
+func contains(rules []string, name string) bool {
+	for _, rule := range rules {
+		if rule == name {
+			return true
+		}
+	}
+	return false
+}
+func executeSelectiveBackup(configFile *config.Config, opts *opts) {
 	for _, name := range opts.args {
 		executeRule(configFile, name, opts)
 	}
