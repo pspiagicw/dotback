@@ -1,37 +1,21 @@
 package help
 
-import "fmt"
+import (
+	"github.com/pspiagicw/pelp"
+)
 
 func HelpBackup() {
-	fmt.Println("Backup dotfiles")
-	fmt.Println()
-	fmt.Println("USAGE")
-	fmt.Println("   dotback [flags] backup <rules>")
-	fmt.Println()
-	fmt.Println("FLAGS")
-	flags := `
---dry-run:`
-	description := `
-Dry run the backup.( Don't execute any disk operations)`
-	printAligned(flags, description)
-	fmt.Println("ARGUMENTS")
-	fmt.Println("   The rules to execute.")
-	fmt.Println("   - If empty, backup everything.")
-	fmt.Println()
-	fmt.Println("EXAMPLES")
-	fmt.Println("   $ dotback backup")
-	fmt.Println("   $ dotback backup nvim emacs micro")
-	fmt.Println("   $ dotback --dry-run backup")
+	pelp.Print("Backup dotfiles")
+	pelp.HeaderWithDescription("usage", []string{"dotback [flags] backup <rules>"})
+
+	pelp.Flags("flags", []string{"dry-run"}, []string{"Dry run the backup.( Don't execute any disk operations)"})
+
+	pelp.HeaderWithDescription("arguments", []string{"The rules to execute.", "- If empty, backup everything."})
+	pelp.Examples("examples", []string{"dotback backup", "dotback backup nvim emacs micro", "dotback --dry-run backup"})
 }
 func HelpConfig() {
-	fmt.Println("Show config info")
-	fmt.Println()
-	fmt.Println("USAGE")
-	fmt.Println("   dotback config")
-	fmt.Println()
-	fmt.Println("EXAMPLES")
-	fmt.Println("   $ dotback config")
-	fmt.Println()
-	fmt.Println("MORE INFO")
-	fmt.Println("   You can use `dotback --example-config` to get a example config.")
+	pelp.Print("Show config info")
+	pelp.HeaderWithDescription("usage", []string{"dotback config"})
+	pelp.Examples("examples", []string{"dotback config"})
+	pelp.HeaderWithDescription("more help", []string{"Use 'dotback help [command]' for more info about a command."})
 }

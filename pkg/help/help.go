@@ -1,10 +1,8 @@
 package help
 
 import (
-	"fmt"
-
-	"github.com/charmbracelet/lipgloss"
 	"github.com/pspiagicw/goreland"
+	"github.com/pspiagicw/pelp"
 )
 
 const EXAMPLE_CONFIG = `
@@ -35,15 +33,11 @@ location = "~/.gitconfig"
 `
 
 func PrintVersion(version string) {
-	fmt.Printf("dotback version: '%s'\n", version)
+	pelp.Version("dotback", version)
 }
 func printHeader() {
-	fmt.Println("Backup dotfiles the simple way!")
-	fmt.Println()
-	fmt.Println("USAGE")
-	fmt.Println("  dotback [command] [args]")
-	fmt.Println()
-
+	pelp.Print("Backup dotfiles the simple way!")
+	pelp.HeaderWithDescription("usage", []string{"dotback [command] [args]"})
 }
 
 func PrintHelp(version string) {
@@ -51,40 +45,18 @@ func PrintHelp(version string) {
 	printHeader()
 	printCommands()
 
-	fmt.Println("EXAMPLES")
-	fmt.Println("  $ dotback backup")
-	fmt.Println()
+	pelp.Examples("examples", []string{"dotback backup", "dotback config"})
 
 	printFooter()
 }
 
 func printFooter() {
-	fmt.Println("MORE HELP")
-	fmt.Println("  Use 'dotback help [command]' for more info about a command.")
+	pelp.HeaderWithDescription("more help", []string{"Use 'dotback help [command]' for more info about a command."})
 }
 func printCommands() {
-	fmt.Println("COMMANDS")
-	commands := `
-backup:
-version:
-config:
-help:`
-	messages := `
-Backup your dotfiles
-Show version info
-Print the current config
-Show this message`
-	printAligned(commands, messages)
-	fmt.Println()
-}
-func printAligned(left, right string) {
-	leftCol := lipgloss.NewStyle().Align(lipgloss.Left).SetString(left).MarginLeft(2).String()
-	rightCol := lipgloss.NewStyle().Align(lipgloss.Left).SetString(right).MarginLeft(5).String()
-
-	fmt.Println(lipgloss.JoinHorizontal(lipgloss.Bottom, leftCol, rightCol))
-
-	fmt.Println()
-
+	commands := []string{"backup:", "version:", "config:", "help:"}
+	messages := []string{"Backup your dotfiles", "Show version info", "Print the current config", "Show this message"}
+	pelp.Aligned("commands", commands, messages)
 }
 func HelpArgs(args []string, version string) {
 	if len(args) == 0 {
@@ -110,6 +82,6 @@ func HelpArgs(args []string, version string) {
 
 }
 func HelpExampleConfig() {
-	fmt.Println("EXAMPLE CONFIG")
-	fmt.Println(EXAMPLE_CONFIG)
+	pelp.HeaderWithDescription("example config", []string{})
+	pelp.Print(EXAMPLE_CONFIG)
 }

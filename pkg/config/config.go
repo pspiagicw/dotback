@@ -48,6 +48,16 @@ func GetConfig() *Config {
 	d := toml.NewDecoder(bytes.NewReader(contents))
 	config := new(Config)
 	d.Decode(config)
+
+	checkConfig(config)
 	return config
 
+}
+func checkConfig(config *Config) {
+	if config.StoreDir == "" {
+		goreland.LogFatal("StoreDir is not set in the config file")
+	}
+	if config.Rules == nil {
+		goreland.LogFatal("No backup rules found in the config file")
+	}
 }
