@@ -24,13 +24,29 @@ Instead of making confusing and outright dangerous symlinks, this simply backs u
 - A single binary, no runtime environments or large dependencies.
 - Designed with Unix philosophy, it only does backup.
 
+## Installation
+
+You can download the binary from the [releases](https://github.com/pspiagicw/dotback/releases) section.
+
+If you have the `Go` compiler installed, you can also install it using the following command.
+
+```sh
+go install github.com/pspiagicw/gox@latest
+```
+
+If you use [`gox`](https://github.com/pspiagicw/gox) to manage your go binaries, you can also install it using the following command.
+
+```sh
+gox install github.com/pspiagicw/gox@latest
+```
+
 ## Configuration
 
 It tries to find the default configuration in `$XDG_CONFIG_HOME/dotback/backup.toml`.
-- It should also have a `storeLocation` variable defined. 
+- It should have a `storeDir` variable defined. 
 - It can optionally provide a `after-backup` list of commands to run.
 
-A example file.
+> You can also run `dotback --example-config` to get an example config file.
 
 ```toml
 
@@ -61,76 +77,60 @@ location = "~/.gitconfig"
 
 ```
 
-</br>
-
 > You can run `dotback config` to get info about the current config.
-
-</br>
 
 ![config](./gifs/config.gif)
 
 ## Usage
 
-### Backup
+### `backup`
 
-Simply run `dotback backup` to backup configured in the config file. It would backup everything in `storeDir`.
-
-
-> This ignores `.git` and `.gitignore` files within any backup folder.
-
-</br>
+Simply run `dotback backup` to backup configured in the config file. 
+- It would backup everything to `storeDir`.
+- This ignores `.git` and `.gitignore` files within any backup folder.
 
 ![demo](./gifs/backup.gif)
 
-</br>
-
-> You can also specify selective rules for backup. This only backs up `nvim`.
-
-</br>
+- You can also specify selective rules for backup. 
 
 ```sh
+# Only backup neovim config
 dotback backup nvim
 ```
 
-> You can also provide `--ignore` flag to ignore selective rules for backup. This ignores `nvim` and `neomutt`.
+- You can also provide `--ignore` flag to ignore selective rules for backup.
 
 ```sh
+# Backup everything except neovim and neomutt
 dotback backup --ignore nvim neomutt
 ```
 
-> You can provide `--dry-run` flag to not actually backup anything.
+![ignore](./gifs/ignore.gif)
 
+- You can provide `--dry-run` flag to not actually backup anything.
+
+```sh
+# Don't actually backup anything
+dotback backup --dry-run
+```
 
 
 ## Unix philosophy
 
 `dotback` is not a full fledged backup solution for your dotfiles. It is a simple tool with a simple use.
 
-## It does not
+## `it does not`
 - Provide incremental backup (Use rsync or borg)
 - Provide automatic backup (Use systemd or cron for that) 
 - Sync with different machines (Use syncthing for that)
 - Install your dotfiles on a new machine.
 
-## It does
-- Copy the file or folder into the `backupLocation`.
+## `it does`
+- Copy the file or folder into the `storeDir`.
 - Provide ability to run scripts before and after running the backups.
 
 You can see the backup.yml example file(in the repo) for more reference.
 
-## Installation
-
-You can either use `go` or [`gox`](https://github.com/pspiagicw/gox) to automatically install the binary.
-
-```
-go install github.com/pspiagicw/gox@latest
-
-# Much better 
-
-gox install github.com/pspiagicw/gox@latest
-```
-
-Or download the binary from the [releases](https://github.com/pspiagicw/dotback/releases) section.
 
 ## Contribution
 
