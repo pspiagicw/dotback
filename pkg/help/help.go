@@ -6,7 +6,6 @@ import (
 )
 
 const EXAMPLE_CONFIG = `
-
 # A folder to store the backup, it will be created if it does not exist.
 storeDir = "~/.local/state/backup"
 
@@ -44,10 +43,18 @@ func PrintHelp(version string) {
 	PrintVersion(version)
 	printHeader()
 	printCommands()
+	printFlags()
 
 	pelp.Examples("examples", []string{"dotback backup", "dotback config"})
 
 	printFooter()
+}
+
+func printFlags() {
+	flags := []string{"example-config", "config"}
+	messages := []string{"Print example config", "Path to the alternate config file."}
+
+	pelp.Flags("flags", flags, messages)
 }
 
 func printFooter() {

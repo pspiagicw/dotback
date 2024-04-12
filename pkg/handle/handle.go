@@ -17,29 +17,27 @@ func HandleArgs(opts *argparse.Opts) {
 
 	cmd := opts.Args[0]
 
-	handlers := map[string]func([]string){
-		"version": func([]string) {
+	handlers := map[string]func(*argparse.Opts){
+		"version": func(*argparse.Opts) {
 			help.PrintVersion(opts.Version)
 		},
 		"backup": backup.PerformBackup,
 		"config": config.PrintConfig,
-		"help": func(args []string) {
-			help.HelpArgs(args, opts.Version)
+		"help": func(opts *argparse.Opts) {
+			help.HelpArgs(opts.Args, opts.Version)
 		},
-		"restore": notImplemented,
 	}
 
 	handler, exists := handlers[cmd]
 
+	opts.Args = opts.Args[1:]
+
 	if exists {
-		handler(opts.Args[1:])
+		handler(opts)
 	} else {
 		help.PrintHelp(opts.Version)
 		goreland.LogFatal("No command named %s", cmd)
 	}
-}
-func notImplemented(args []string) {
-	goreland.LogError("This feature is not implemented yet!")
 }
 func checkExampleConfig(opts *argparse.Opts) {
 	if opts.ExampleConfig {

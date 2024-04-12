@@ -10,6 +10,13 @@ type Opts struct {
 	ExampleConfig bool
 	Args          []string
 	Version       string
+
+	// Config file path
+	Config string
+
+	// Backup options
+	DryRun bool
+	Ignore bool
 }
 
 func ParseArguments(version string) *Opts {
@@ -20,6 +27,7 @@ func ParseArguments(version string) *Opts {
 		help.PrintHelp(version)
 	}
 	flag.BoolVar(&opts.ExampleConfig, "example-config", false, "Print example config.")
+	flag.StringVar(&opts.Config, "config", "", "Path to the alternate config file.")
 	flag.Usage = Usage
 	flag.Parse()
 

@@ -4,20 +4,21 @@ import (
 	"flag"
 	"fmt"
 
+	"github.com/pspiagicw/dotback/pkg/argparse"
 	"github.com/pspiagicw/dotback/pkg/help"
 	"github.com/pspiagicw/goreland"
 )
 
-func parseConfigArgs(args []string) {
+func parseConfigArgs(opts *argparse.Opts) {
 	flag := flag.NewFlagSet("dotback config", flag.ExitOnError)
 
 	flag.Usage = help.HelpConfig
 
-	flag.Parse(args)
+	flag.Parse(opts.Args)
 }
 
-func PrintConfig(args []string) {
-	parseConfigArgs(args)
+func PrintConfig(opts *argparse.Opts) {
+	parseConfigArgs(opts)
 	fmt.Println("DOTBACK CONFIG")
 	config := GetConfig()
 	fmt.Printf("Location dir: %s\n", config.StoreDir)
@@ -26,13 +27,13 @@ func PrintConfig(args []string) {
 
 }
 func printAfterBackup(config *Config) {
-	fmt.Println("\nThe after-backup commands:\n")
+	fmt.Println("\nThe after-backup commands:")
 	for _, command := range config.AfterBackup {
 		goreland.LogExec(command)
 	}
 }
 func printRules(config *Config) {
-	fmt.Println("\nConfigured backup rules:\n")
+	fmt.Println("\nConfigured backup rules:")
 	headers := []string{
 		"Name",
 		"Location",
