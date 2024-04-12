@@ -45,7 +45,7 @@ func PerformBackup(opts *argparse.Opts) {
 }
 
 func preBackup(opts *argparse.Opts) *config.Config {
-	configFile := config.GetConfig()
+	configFile := config.GetConfig(opts)
 	confirmBackup()
 	ensureStorePath(configFile)
 	return configFile

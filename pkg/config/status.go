@@ -20,7 +20,7 @@ func parseConfigArgs(opts *argparse.Opts) {
 func PrintConfig(opts *argparse.Opts) {
 	parseConfigArgs(opts)
 	fmt.Println("DOTBACK CONFIG")
-	config := GetConfig()
+	config := GetConfig(opts)
 	fmt.Printf("Location dir: %s\n", config.StoreDir)
 	printAfterBackup(config)
 	printRules(config)

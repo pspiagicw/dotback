@@ -8,6 +8,7 @@ import (
 
 	"github.com/BurntSushi/toml"
 	"github.com/adrg/xdg"
+	"github.com/pspiagicw/dotback/pkg/argparse"
 	"github.com/pspiagicw/goreland"
 )
 
@@ -42,16 +43,27 @@ func assertConfigFile() {
 		goreland.LogFatal("Run dotback help config for more information.")
 	}
 }
-func GetConfig() *Config {
-	assertConfigFile()
-	contents := readConfigFile(getConfigPath())
+func GetConfig(opts *argparse.Opts) *Config {
+
+	path := getConfigPath()
+
+	if opts.Config != "" {
+		path = opts.Config
+	}
+
+	config := newFromFile(path)
+
+	return config
+
+}
+func newFromFile(path string) *Config {
+	contents := readConfigFile(path)
 	d := toml.NewDecoder(bytes.NewReader(contents))
 	config := new(Config)
 	d.Decode(config)
 
 	checkConfig(config)
 	return config
-
 }
 func checkConfig(config *Config) {
 	if config.StoreDir == "" {

@@ -83,6 +83,11 @@ location = "~/.gitconfig"
 
 ## Usage
 
+### `flags`
+`dotback` provides the following flags.
+- `--config` : Path to a alternate config file. (Should be absolute path)
+- `--example-config` : Print an example config file.
+
 ### `backup`
 
 Simply run `dotback backup` to backup configured in the config file. 
