@@ -10,35 +10,38 @@ import (
 	"github.com/pspiagicw/goreland"
 )
 
-func HandleArgs(opts *argparse.Opts) {
+var handlers map[string]func(*argparse.Opts) = map[string]func(*argparse.Opts){
+	"version": func(opts *argparse.Opts) {
+		help.PrintVersion(opts.Version)
+	},
+	"backup": backup.Backup,
+	"config": config.PrintConfig,
+	"help": func(opts *argparse.Opts) {
+		help.Handle(opts.Args, opts.Version)
+	},
+}
+
+func Handle(opts *argparse.Opts) {
 
 	checkExampleConfig(opts)
 	checkArgLen(opts)
+	execCmd(opts)
+}
 
+func execCmd(opts *argparse.Opts) {
 	cmd := opts.Args[0]
-
-	handlers := map[string]func(*argparse.Opts){
-		"version": func(*argparse.Opts) {
-			help.PrintVersion(opts.Version)
-		},
-		"backup": backup.PerformBackup,
-		"config": config.PrintConfig,
-		"help": func(opts *argparse.Opts) {
-			help.HelpArgs(opts.Args, opts.Version)
-		},
-	}
-
-	handler, exists := handlers[cmd]
-
 	opts.Args = opts.Args[1:]
 
-	if exists {
+	handler := handlers[cmd]
+
+	if handler != nil {
 		handler(opts)
 	} else {
 		help.PrintHelp(opts.Version)
 		goreland.LogFatal("No command named %s", cmd)
 	}
 }
+
 func checkExampleConfig(opts *argparse.Opts) {
 	if opts.ExampleConfig {
 		help.HelpExampleConfig()
@@ -50,5 +53,4 @@ func checkArgLen(opts *argparse.Opts) {
 		help.PrintHelp(opts.Version)
 		goreland.LogFatal("No command provided")
 	}
-
 }

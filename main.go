@@ -9,5 +9,5 @@ var VERSION string = "unversioned"
 
 func main() {
 	opts := argparse.ParseArguments(VERSION)
-	handler.HandleArgs(opts)
+	handler.Handle(opts)
 }

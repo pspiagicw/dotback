@@ -65,7 +65,7 @@ func printCommands() {
 	messages := []string{"Backup your dotfiles", "Show version info", "Print the current config", "Show this message"}
 	pelp.Aligned("commands", commands, messages)
 }
-func HelpArgs(args []string, version string) {
+func Handle(args []string, version string) {
 	if len(args) == 0 {
 		PrintHelp(version)
 		return

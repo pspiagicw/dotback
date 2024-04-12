@@ -43,7 +43,7 @@ func assertConfigFile() {
 		goreland.LogFatal("Run dotback help config for more information.")
 	}
 }
-func GetConfig(opts *argparse.Opts) *Config {
+func NewConfig(opts *argparse.Opts) *Config {
 
 	path := getConfigPath()
 
