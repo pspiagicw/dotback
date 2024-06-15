@@ -140,4 +140,4 @@ You can see the backup.yml example file(in the repo) for more reference.
 It is a very highly opinated tool. It does not fit in everybody's workflow.
 But if it does, please do share your support and love.
 
-Anybody is welcome to contribute and extend this project on [GitHub](https://github.com/dotback).
+Anybody is welcome to contribute and extend this project on [GitHub](https://github.com/pspiagicw/dotback).
