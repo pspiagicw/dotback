@@ -2,8 +2,6 @@
 
 `dotback` backs up your dotfiles.
 
-Instead of making confusing and outright dangerous symlinks, this simply backs up your dotfiles using a `toml` file.
-
 <!-- TOC start (generated with https://github.com/derlin/bitdowntoc) -->
 
 - [`dotback`](#dotback)
@@ -19,33 +17,35 @@ Instead of making confusing and outright dangerous symlinks, this simply backs u
 
 <!-- TOC end -->
 
-## Features
+# Features
 
 - A single binary, no runtime environments or large dependencies.
 - Designed with Unix philosophy, it only does backup.
+- No symlinks, only simple copying.
 
-## Installation
+# Installation
 
 You can download the binary from the [releases](https://github.com/pspiagicw/dotback/releases) section.
 
 If you have the `Go` compiler installed, you can also install it using the following command.
 
-```sh
+```sh {linenos=false}
 go install github.com/pspiagicw/gox@latest
 ```
 
-If you use [`gox`](https://github.com/pspiagicw/gox) to manage your go binaries, you can also install it using the following command.
+If you use [`gox`](https://github.com/pspiagicw/gox) to manage your go binaries, you can run.
 
-```sh
+```sh {linenos=false}
 gox install github.com/pspiagicw/gox@latest
 ```
 
-## Configuration
+# Configuration
 
 It tries to find the default configuration in `$XDG_CONFIG_HOME/dotback/backup.toml`.
 - It should have a `storeDir` variable defined. 
 - It can optionally provide a `after-backup` list of commands to run.
 
+> [!NOTE]
 > You can also run `dotback --example-config` to get an example config file.
 
 ```toml
@@ -77,13 +77,14 @@ location = "~/.gitconfig"
 
 ```
 
+> [!NOTE]
 > You can run `dotback config` to get info about the current config.
 
 ![config](./gifs/config.gif)
 
-## Usage
+# Usage
 
-### `flags`
+## `flags`
 `dotback` provides the following flags.
 - `--config` : Path to a alternate config file. (Should be absolute path)
 - `--example-config` : Print an example config file.
@@ -98,14 +99,14 @@ Simply run `dotback backup` to backup configured in the config file.
 
 - You can also specify selective rules for backup. 
 
-```sh
+```sh {linenos=false}
 # Only backup neovim config
 dotback backup nvim
 ```
 
 - You can also provide `--ignore` flag to ignore selective rules for backup.
 
-```sh
+```sh {linenos=false}
 # Backup everything except neovim and neomutt
 dotback backup --ignore nvim neomutt
 ```
@@ -114,13 +115,11 @@ dotback backup --ignore nvim neomutt
 
 - You can provide `--dry-run` flag to not actually backup anything.
 
-```sh
+```sh {linenos=false}
 # Don't actually backup anything
 dotback backup --dry-run
 ```
-
-
-## Unix philosophy
+# Unix philosophy
 
 `dotback` is not a full fledged backup solution for your dotfiles. It is a simple tool with a simple use.
 
@@ -136,10 +135,9 @@ dotback backup --dry-run
 
 You can see the backup.yml example file(in the repo) for more reference.
 
-
-## Contribution
+# Contribution
 
 It is a very highly opinated tool. It does not fit in everybody's workflow.
 But if it does, please do share your support and love.
 
-Anybody is welcome to contribute and extend this project. 
+Anybody is welcome to contribute and extend this project on [GitHub](https://github.com/dotback).
