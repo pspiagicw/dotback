@@ -48,6 +48,7 @@ func checkExampleConfig(opts *argparse.Opts) {
 		os.Exit(0)
 	}
 }
+
 func checkArgLen(opts *argparse.Opts) {
 	if len(opts.Args) == 0 {
 		help.PrintHelp(opts.Version)

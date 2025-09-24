@@ -29,6 +29,7 @@ func Backup(opts *argparse.Opts) {
 
 	parseBackupOpts(opts)
 	configFile := getConfig(opts)
+	confirmBackup()
 
 	executeBackup(configFile, opts)
 	postBackup(configFile, opts)
@@ -50,8 +51,8 @@ func postBackup(configFile *config.Config, opts *argparse.Opts) {
 
 func getConfig(opts *argparse.Opts) *config.Config {
 	configFile := config.NewConfig(opts)
-	confirmBackup()
 	ensureStorePath(configFile)
+
 	return configFile
 }
 func ensureStorePath(configFile *config.Config) {
