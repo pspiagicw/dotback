@@ -167,8 +167,9 @@ func runAfterBackup(configfile *config.Config, opts *argparse.Opts) {
 			goreland.LogFatal("Failed to parse command '%s':%v", cmd, err)
 		}
 
-		goreland.LogExec(cmd)
-		err = goreland.Execute(args[0], args[1:], []string{})
+		destDir := expandHome(configfile.StoreDir)
+		goreland.LogExecSimple(cmd)
+		err = goreland.ExecuteDir(args[0], args[1:], []string{}, destDir)
 		if err != nil {
 			goreland.LogFatal("Error executing: %v", err)
 		}

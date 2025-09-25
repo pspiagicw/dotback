@@ -47,6 +47,10 @@ github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZb
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
 github.com/pspiagicw/goreland v0.0.0-20231114040425-9e1a4343f6f4 h1:1I20HwlkaDZeuHnijbELqfswR4NiQ+g+BpOfiHEpNBU=
 github.com/pspiagicw/goreland v0.0.0-20231114040425-9e1a4343f6f4/go.mod h1:w9C97TNLperGU930lN/hc2XuWUlYzPbBUW1OA1ka4DM=
+github.com/pspiagicw/goreland v0.1.1 h1:SMCQWvmH0txQMiBad72n3KHVF4PHs+pwzjn893wna0Q=
+github.com/pspiagicw/goreland v0.1.1/go.mod h1:w9C97TNLperGU930lN/hc2XuWUlYzPbBUW1OA1ka4DM=
+github.com/pspiagicw/goreland v0.1.2-0.20250925174446-c8be49805e49 h1:HPUuR+ZiREPQodhpOQb9XYSaMZCC7p9yZjD1u4IrR+k=
+github.com/pspiagicw/goreland v0.1.2-0.20250925174446-c8be49805e49/go.mod h1:w9C97TNLperGU930lN/hc2XuWUlYzPbBUW1OA1ka4DM=
 github.com/pspiagicw/pelp v0.0.0-20240318161701-7448ea2e376e h1:N0ZhzS8AdPstCIV7eti5BOXhen73DjGj0+d393GXWcU=
 github.com/pspiagicw/pelp v0.0.0-20240318161701-7448ea2e376e/go.mod h1:HSSd41FYDxcdCZvXRKUlh9Uh9PaXzdX2vTnwhHkgN0Q=
 github.com/rivo/uniseg v0.1.0/go.mod h1:J6wj4VEh+S6ZtnVlnTBMWIodfgj8LQOQFoIToxlJtxc=
