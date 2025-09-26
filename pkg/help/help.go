@@ -31,40 +31,41 @@ location = "~/.gitconfig"
 
 `
 
-func PrintVersion(version string) {
+func Version(version string) {
 	pelp.Version("dotback", version)
 }
-func printHeader() {
+func header() {
 	pelp.Print("Backup dotfiles the simple way!")
 	pelp.HeaderWithDescription("usage", []string{"dotback [command] [args]"})
 }
 
 func PrintHelp(version string) {
-	PrintVersion(version)
-	printHeader()
-	printCommands()
-	printFlags()
+	Version(version)
+	header()
+	commands()
+	flags()
 
 	pelp.Examples("examples", []string{"dotback backup", "dotback config"})
 
-	printFooter()
+	footer()
 }
 
-func printFlags() {
+func flags() {
 	flags := []string{"example-config", "config"}
 	messages := []string{"Print example config", "Path to the alternate config file."}
 
 	pelp.Flags("flags", flags, messages)
 }
 
-func printFooter() {
+func footer() {
 	pelp.HeaderWithDescription("more help", []string{"Use 'dotback help [command]' for more info about a command."})
 }
-func printCommands() {
+func commands() {
 	commands := []string{"backup:", "version:", "config:", "help:"}
 	messages := []string{"Backup your dotfiles", "Show version info", "Print the current config", "Show this message"}
 	pelp.Aligned("commands", commands, messages)
 }
+
 func Handle(args []string, version string) {
 	if len(args) == 0 {
 		PrintHelp(version)
@@ -72,18 +73,14 @@ func Handle(args []string, version string) {
 	}
 	cmd := args[0]
 
-	handlers := map[string]func(){
-		"backup": HelpBackup,
-		"config": HelpConfig,
-		"version": func() {
-			PrintVersion(version)
-		},
-	}
-
-	handlerFunc, exists := handlers[cmd]
-	if exists {
-		handlerFunc()
-	} else {
+	switch cmd {
+	case "backup":
+		HelpBackup()
+	case "config":
+		HelpConfig()
+	case "version":
+		Version(version)
+	default:
 		goreland.LogFatal("No help for command %s found", cmd)
 	}
 

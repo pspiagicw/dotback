@@ -4,6 +4,9 @@ import (
 	"bytes"
 	"os"
 
+	"github.com/kballard/go-shellquote"
+	"github.com/pspiagicw/dotback/pkg/helper"
+
 	"github.com/BurntSushi/toml"
 	"github.com/adrg/xdg"
 	"github.com/pspiagicw/dotback/pkg/argparse"
@@ -12,12 +15,14 @@ import (
 
 type BackupRule struct {
 	Location string `toml:"location"`
+	Name     string
 }
 type Config struct {
 	StoreDir    string                 `toml:"storeDir"`
 	Rules       map[string]*BackupRule `toml:"backup"`
 	AfterBackup []string               `toml:"after-backup"`
 	Ignore      []string               `toml:"ignore"`
+	Commands    [][]string
 }
 
 func getConfigPath() string {
@@ -29,6 +34,7 @@ func getConfigPath() string {
 
 	return location
 }
+
 func readConfigFile(filepath string) []byte {
 	contents, err := os.ReadFile(filepath)
 	if err != nil {
@@ -47,9 +53,40 @@ func NewConfig(opts *argparse.Opts) *Config {
 
 	config := newFromFile(path)
 
+	sanitizeConfig(config)
+
 	return config
 
 }
+
+func sanitizeConfig(config *Config) {
+	cleanedStorePath := helper.ExpandHome(config.StoreDir)
+	helper.CreateIfNotExist(cleanedStorePath)
+	config.StoreDir = cleanedStorePath
+
+	for name, rule := range config.Rules {
+		cleanedLocation := helper.ExpandHome(rule.Location)
+		doesExist := helper.DoesExist(cleanedLocation)
+
+		if !doesExist {
+			goreland.LogFatal("Filepath '%s' for rule [%s], doesn't exist", cleanedLocation, name)
+		}
+		rule.Location = cleanedLocation
+		rule.Name = name
+
+	}
+
+	for _, cmd := range config.AfterBackup {
+		args, err := shellquote.Split(cmd)
+
+		if err != nil {
+			goreland.LogFatal("Failed to parse command '%s': %v", cmd, err)
+		}
+
+		config.Commands = append(config.Commands, args)
+	}
+}
+
 func newFromFile(path string) *Config {
 	contents := readConfigFile(path)
 	d := toml.NewDecoder(bytes.NewReader(contents))
@@ -57,14 +94,5 @@ func newFromFile(path string) *Config {
 	config := new(Config)
 	d.Decode(config)
 
-	checkConfig(config)
 	return config
-}
-func checkConfig(config *Config) {
-	if config.StoreDir == "" {
-		goreland.LogFatal("StoreDir is not set in the config file")
-	}
-	if config.Rules == nil {
-		goreland.LogFatal("No backup rules found in the config file")
-	}
 }

@@ -28,7 +28,7 @@ func PrintConfig(opts *argparse.Opts) {
 func printAfterBackup(config *Config) {
 	fmt.Println("\nThe after-backup commands:")
 	for _, command := range config.AfterBackup {
-		goreland.LogExec(command)
+		goreland.LogExecSimple(command)
 	}
 }
 func printRules(config *Config) {

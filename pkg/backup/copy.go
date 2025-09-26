@@ -1,12 +1,9 @@
 package backup
 
 import (
-	"errors"
 	"io/fs"
-	"os"
 	"path/filepath"
 
-	homedir "github.com/mitchellh/go-homedir"
 	cp "github.com/otiai10/copy"
 	"github.com/pspiagicw/goreland"
 )
@@ -42,21 +39,4 @@ func SkipFunc(srcinfo fs.FileInfo, src string, dest string) (bool, error) {
 		return true, nil
 	}
 	return false, nil
-}
-func expandHome(filepath string) string {
-	path, err := homedir.Expand(filepath)
-	if err != nil {
-		goreland.LogFatal("Unable to expand home variable: %v", err)
-	}
-	return path
-}
-func createIfNotExist(folder string) {
-	if _, err := os.Stat(folder); errors.Is(err, fs.ErrNotExist) {
-		err := os.MkdirAll(folder, 0755)
-		if err != nil {
-			goreland.LogFatal("Error creating directory: %s", folder)
-		}
-	} else if err != nil {
-		goreland.LogFatal("Error stating file: %s", err)
-	}
 }
