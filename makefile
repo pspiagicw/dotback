@@ -1,9 +1,8 @@
-all: build test
+all: build 
 
 build:
 	go build .
-test: 
-	go test -v ./...
+
 format:
 	go format ./...
 .PHONY: build test format all

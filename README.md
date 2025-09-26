@@ -39,6 +39,8 @@ go install github.com/pspiagicw/dotback@latest
 It tries to find the default configuration in `$XDG_CONFIG_HOME/dotback/backup.toml`.
 - It should have a `storeDir` variable defined. 
 - It can optionally provide a `after-backup` list of commands to run.
+- The `after-backup` commands provide 3 variables, `STOREDIR`, `TIME` and `DATE` for usage within the commands.
+
 
 > [!NOTE]
 > You can also run `dotback --example-config` to get an example config file.
@@ -54,7 +56,9 @@ storeDir = "~/.local/state/backup"
 after-backup = [
     "scp -r ...",
     "rsync ....",
-    "tar -xvzf ..."
+    "tar -xvzf ...",
+# Supports variables (should start with `$` and can optionally be in curly braces.)
+    "git commit -am '$DATE ${TIME}'"
 ]
 
 

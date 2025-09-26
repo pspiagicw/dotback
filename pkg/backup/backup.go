@@ -8,7 +8,6 @@ import (
 	"github.com/pspiagicw/dotback/pkg/argparse"
 	"github.com/pspiagicw/dotback/pkg/config"
 	"github.com/pspiagicw/dotback/pkg/help"
-	"github.com/pspiagicw/dotback/pkg/helper"
 	"github.com/pspiagicw/goreland"
 )
 
@@ -29,7 +28,7 @@ func Backup(opts *argparse.Opts) {
 
 	parseBackupOpts(opts)
 	configFile := config.NewConfig(opts)
-	helper.Confirm("Do you want to start the backup ?", "User cancelled the backup")
+	goreland.Confirm("Do you want to start the backup ?", "User cancelled the backup")
 
 	startBackup(configFile, opts)
 	postBackup(configFile, opts)
@@ -66,7 +65,7 @@ func filterRules(configFile *config.Config, opts *argparse.Opts) []string {
 
 func postBackup(configFile *config.Config, opts *argparse.Opts) {
 	goreland.LogInfo("Backup complete!")
-	helper.Confirm("Run the after-backup procedure ?", "User cancelled the after-backup procedure.")
+	goreland.Confirm("Run the after-backup procedure ?", "User cancelled the after-backup procedure.")
 
 	runAfterBackup(configFile, opts)
 
