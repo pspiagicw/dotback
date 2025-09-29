@@ -1,60 +1,69 @@
 package backup
 
 import (
-	"flag"
 	"path/filepath"
 
 	mapset "github.com/deckarep/golang-set/v2"
-	"github.com/pspiagicw/dotback/pkg/argparse"
 	"github.com/pspiagicw/dotback/pkg/config"
-	"github.com/pspiagicw/dotback/pkg/help"
 	"github.com/pspiagicw/goreland"
 )
 
-func parseBackupOpts(opts *argparse.Opts) {
-
-	flag := flag.NewFlagSet("groom backup", flag.ExitOnError)
-
-	flag.BoolVar(&opts.DryRun, "dry-run", false, "Dry run the backup")
-	flag.BoolVar(&opts.Ignore, "ignore", false, "Ignore the backup")
-
-	flag.Usage = help.HelpBackup
-	flag.Parse(opts.Args)
-
-	opts.Args = flag.Args()
+type opts struct {
+	dryRun bool
+	ignore bool
+	args   []string
 }
 
-func Backup(opts *argparse.Opts) {
+func Backup(configPath string, dryRun bool, ignore bool, rules []string) {
 
-	parseBackupOpts(opts)
-	configFile := config.NewConfig(opts)
+	configFile := config.NewConfig(configPath)
+
+	o := &opts{
+		dryRun: dryRun,
+		ignore: ignore,
+		args:   rules,
+	}
+
+	startBackup(configFile, o)
+	postBackup(configFile, o)
+}
+func logRules(rules []string, o *opts) {
+
+	if len(rules) == 0 && len(o.args) != 1 {
+		goreland.LogFatal("No rules to execute, check command or arguments.")
+	}
+
+	if o.ignore {
+		goreland.LogInfo("Ignoring rules: %s", o.args)
+	}
+
+	goreland.LogInfo("Executing rules: %s", rules)
 	goreland.Confirm("Do you want to start the backup ?", "User cancelled the backup")
-
-	startBackup(configFile, opts)
-	postBackup(configFile, opts)
 }
 
-func startBackup(configFile *config.Config, opts *argparse.Opts) {
-	rulesToExecute := filterRules(configFile, opts)
+func startBackup(configFile *config.Config, o *opts) {
+	rulesToExecute := filterRules(configFile, o)
+
+	logRules(rulesToExecute, o)
 
 	for _, rule := range rulesToExecute {
-		executeRule(configFile, rule, opts)
+		executeRule(configFile, rule, o)
 	}
 }
 
-func filterRules(configFile *config.Config, opts *argparse.Opts) []string {
+func filterRules(configFile *config.Config, o *opts) []string {
 
 	keys := mapset.NewSetFromMapKeys(configFile.Rules)
-	args := mapset.NewSet(opts.Args...)
+	args := mapset.NewSet(o.args...)
 
 	// If no args given, execute everything (only when ignore not given)
-	if !opts.Ignore && len(opts.Args) == 0 {
+	if !o.ignore && len(o.args) == 0 {
 		args = keys
 	}
 
 	var results mapset.Set[string]
 
-	if opts.Ignore {
+	if o.ignore {
 		results = keys.Difference(args)
 	} else {
 		results = keys.Intersect(args)
@@ -63,16 +72,16 @@ func filterRules(configFile *config.Config, opts *argparse.Opts) []string {
 	return results.ToSlice()
 }
 
-func postBackup(configFile *config.Config, opts *argparse.Opts) {
+func postBackup(configFile *config.Config, o *opts) {
 	goreland.LogInfo("Backup complete!")
 	goreland.Confirm("Run the after-backup procedure ?", "User cancelled the after-backup procedure.")
 
-	runAfterBackup(configFile, opts)
+	runAfterBackup(configFile, o)
 
 	goreland.LogSuccess("Backup successful!")
 }
 
-func executeRule(configFile *config.Config, name string, opts *argparse.Opts) {
+func executeRule(configFile *config.Config, name string, o *opts) {
 
 	rule := configFile.Rules[name]
 
@@ -81,14 +90,14 @@ func executeRule(configFile *config.Config, name string, opts *argparse.Opts) {
 	src := rule.Location
 	dest := filepath.Join(configFile.StoreDir, filepath.Base(src))
 
-	if !opts.DryRun {
+	if !o.dryRun {
 		goreland.CopyIgnoreGit(src, dest, configFile.Ignore)
 	} else {
 		goreland.LogInfo("Move %s -> %s", src, dest)
 	}
 }
 
-func runAfterBackup(configFile *config.Config, opts *argparse.Opts) {
+func runAfterBackup(configFile *config.Config, opts *opts) {
 
 	for i := range configFile.AfterBackup {
 		cmd := configFile.AfterBackup[i]
@@ -96,7 +105,7 @@ func runAfterBackup(configFile *config.Config, opts *argparse.Opts) {
 
 		goreland.LogExecSimple(cmd)
 
-		if opts.DryRun {
+		if opts.dryRun {
 			continue
 		}
 

@@ -5,9 +5,9 @@ go 1.21.4
 require (
 	github.com/BurntSushi/toml v1.3.2
 	github.com/adrg/xdg v0.4.0
+	github.com/alecthomas/kong v1.12.1
 	github.com/deckarep/golang-set/v2 v2.8.0
 	github.com/kballard/go-shellquote v0.0.0-20180428030007-95032a82bc51
-	github.com/otiai10/copy v1.14.1
 	github.com/pspiagicw/demp v0.1.0
 	github.com/pspiagicw/goreland v0.1.2-0.20250929051714-76aed4df0b3e
 	github.com/pspiagicw/pelp v0.0.0-20240318161701-7448ea2e376e
@@ -25,6 +25,7 @@ require (
 	github.com/mitchellh/go-homedir v1.1.0 // indirect
 	github.com/muesli/reflow v0.3.0 // indirect
 	github.com/muesli/termenv v0.15.2 // indirect
+	github.com/otiai10/copy v1.14.1 // indirect
 	github.com/otiai10/mint v1.6.3 // indirect
 	github.com/rivo/uniseg v0.4.7 // indirect
 	golang.org/x/sync v0.8.0 // indirect

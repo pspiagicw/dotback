@@ -10,7 +10,6 @@ import (
 	"github.com/BurntSushi/toml"
 	"github.com/adrg/xdg"
 	"github.com/pspiagicw/demp"
-	"github.com/pspiagicw/dotback/pkg/argparse"
 	"github.com/pspiagicw/goreland"
 )
 
@@ -44,12 +43,12 @@ func readConfigFile(filepath string) []byte {
 	return contents
 }
 
-func NewConfig(opts *argparse.Opts) *Config {
+func NewConfig(configPath string) *Config {
 
 	path := getConfigPath()
 
-	if opts.Config != "" {
-		path = opts.Config
+	if configPath != "" {
+		path = configPath
 	}
 
 	config := newFromFile(path)
