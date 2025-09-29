@@ -82,17 +82,17 @@ func executeRule(configFile *config.Config, name string, opts *argparse.Opts) {
 	dest := filepath.Join(configFile.StoreDir, filepath.Base(src))
 
 	if !opts.DryRun {
-		performCopy(src, dest, configFile.Ignore)
+		goreland.CopyIgnoreGit(src, dest, configFile.Ignore)
 	} else {
 		goreland.LogInfo("Move %s -> %s", src, dest)
 	}
 }
 
-func runAfterBackup(configfile *config.Config, opts *argparse.Opts) {
+func runAfterBackup(configFile *config.Config, opts *argparse.Opts) {
 
-	for i := range configfile.AfterBackup {
-		cmd := configfile.AfterBackup[i]
-		command := configfile.Commands[i]
+	for i := range configFile.AfterBackup {
+		cmd := configFile.AfterBackup[i]
+		command := configFile.Commands[i]
 
 		goreland.LogExecSimple(cmd)
 
@@ -100,7 +100,7 @@ func runAfterBackup(configfile *config.Config, opts *argparse.Opts) {
 			continue
 		}
 
-		err := goreland.ExecuteDir(command[0], command[1:], []string{}, configfile.StoreDir)
+		err := goreland.ExecuteDir(command[0], command[1:], []string{}, configFile.StoreDir)
 		if err != nil {
 			goreland.LogFatal("Error executing: %v", err)
 		}

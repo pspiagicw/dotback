@@ -4,7 +4,7 @@
 
 <!-- TOC start (generated with https://github.com/derlin/bitdowntoc) -->
 
-- [`dotback`](#dotback)
+- [dotback](#dotback)
    * [Features](#features)
    * [Configuration](#configuration)
    * [Usage](#usage)
@@ -83,12 +83,12 @@ location = "~/.gitconfig"
 
 # Usage
 
-## `flags`
+## flags
 `dotback` provides the following flags.
 - `--config` : Path to a alternate config file. (Should be absolute path)
 - `--example-config` : Print an example config file.
 
-### `backup`
+### backup
 
 Simply run `dotback backup` to backup configured in the config file. 
 - It would backup everything to `storeDir`.
@@ -122,13 +122,13 @@ dotback backup --dry-run
 
 `dotback` is not a full fledged backup solution for your dotfiles. It is a simple tool with a simple use.
 
-## `it does not`
+## it does not
 - Provide incremental backup (Use rsync or borg)
 - Provide automatic backup (Use systemd or cron for that) 
 - Sync with different machines (Use syncthing for that)
 - Install your dotfiles on a new machine.
 
-## `it does`
+## it does
 - Copy the file or folder into the `storeDir`.
 - Provide ability to run scripts before and after running the backups.
 
