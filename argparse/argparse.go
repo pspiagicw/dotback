@@ -2,8 +2,8 @@ package argparse
 
 import (
 	"github.com/alecthomas/kong"
-	"github.com/pspiagicw/dotback/pkg/backup"
-	"github.com/pspiagicw/dotback/pkg/config"
+	"github.com/pspiagicw/dotback/backup"
+	"github.com/pspiagicw/dotback/config"
 	"github.com/pspiagicw/pelp"
 )
 

@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/pspiagicw/dotback/pkg/argparse"
+	"github.com/pspiagicw/dotback/argparse"
 )
 
 var VERSION string = "unversioned"

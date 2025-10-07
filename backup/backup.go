@@ -4,7 +4,7 @@ import (
 	"path/filepath"
 
 	mapset "github.com/deckarep/golang-set/v2"
-	"github.com/pspiagicw/dotback/pkg/config"
+	"github.com/pspiagicw/dotback/config"
 	"github.com/pspiagicw/goreland"
 )
 
