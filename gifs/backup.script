@@ -1,0 +1,10 @@
+
+set -x
+
+echo "Recording..."
+sleep 2
+dotback -h
+sleep 2
+dotback backup
+sleep 2
+echo "Done..."
