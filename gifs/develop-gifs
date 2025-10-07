@@ -1,13 +1,13 @@
 #!/bin/sh
 
 asciinema rec -c "bash backup.script" backup.cast
-agg -v --theme asciinema --font-family "CaskaydiaMono Nerd Font Mono" backup.cast backup.gif
+agg -v --theme asciinema --font-size 20 --font-family "CaskaydiaMono Nerd Font Mono" backup.cast backup.gif
 
 asciinema rec -c "bash config.script" config.cast
-agg -v --theme asciinema --font-family "CaskaydiaMono Nerd Font Mono" config.cast config.gif
+agg -v --theme asciinema --font-size 20 --font-family "CaskaydiaMono Nerd Font Mono" config.cast config.gif
 
 asciinema rec -c "bash ignore.script" ignore.cast
-agg -v --theme asciinema --font-family "CaskaydiaMono Nerd Font Mono" ignore.cast ignore.gif
+agg -v --theme asciinema --font-size 20 --font-family  "CaskaydiaMono Nerd Font Mono" ignore.cast ignore.gif
 
 
 rm *.cast
