@@ -1,0 +1,41 @@
+storeDir = "~/.local/state/backup"
+
+after-backup = [
+  "tar -czf ~/.local/state/backup.tgz ~/.local/state/backup",
+  "rsync -av ~/.local/state/backup user@host:/mnt/backup"
+]
+
+ignore = [
+  "*/node_modules/*",
+  "*/.cache/*"
+]
+
+[backup.nvim]
+location = "~/.config/nvim"
+
+[backup.neomutt]
+location = "~/.config/neomutt"
+
+[backup.gitconfig]
+location = "~/.gitconfig"
+
+[backup.wezterm]
+location = "~/.config/wezterm"
+
+[backup.tmux]
+location = "~/.config/tmux"
+
+[backup.newsboat]
+location = "~/.config/newsboat"
+
+[backup.gpg-keys]
+location = "~/.gnupg"
+
+[backup.ssh]
+location = "~/.ssh"
+
+[backup.password-store]
+location = "~/.password-store"
+
+[backup.bashrc]
+location = "~/.bashrc"

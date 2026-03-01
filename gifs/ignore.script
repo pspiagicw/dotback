@@ -1,0 +1,7 @@
+set -x 
+sleep 2
+echo "Recording..."
+dotback -h
+sleep 2
+dotback backup --ignore alacritty ghostty
+sleep 2

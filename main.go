@@ -1,13 +1,14 @@
 package main
 
 import (
-	"github.com/pspiagicw/dotback/pkg/argparse"
-	"github.com/pspiagicw/dotback/pkg/handle"
+	"github.com/pspiagicw/dotback/argparse"
 )
 
 var VERSION string = "unversioned"
 
 func main() {
-	opts := argparse.ParseArguments(VERSION)
-	handler.Handle(opts)
+	// opts := argparse.ParseArguments(VERSION)
+	// handler.Handle(opts)
+	argparse.ParseArguments(VERSION)
+	// handler.Handle(ctx)
 }

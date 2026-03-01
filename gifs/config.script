@@ -1,0 +1,8 @@
+set -x
+sleep 2
+echo "Recording"
+sleep 1
+dotback -h
+sleep 2
+dotback config
+sleep 2
