@@ -40,9 +40,8 @@ func printRules(config *Config) {
 
 }
 
-func ListRules(opts *argparse.Opts) {
-	parseConfigArgs(opts)
-	config := NewConfig(opts)
+func ListRules(configPath string) {
+	config := NewConfig(configPath)
 
 	names := []string{}
 	for name := range config.Rules {
