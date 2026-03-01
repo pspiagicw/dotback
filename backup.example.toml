@@ -1,6 +1,13 @@
 storeDir = "~/.local/state/backup"
+
 after-backup = [
-  "scp -r /home/pspiagicw/.local/state/backup personal:/mnt/backup"
+  "tar -czf ~/.local/state/backup.tgz ~/.local/state/backup",
+  "rsync -av ~/.local/state/backup user@host:/mnt/backup"
+]
+
+ignore = [
+  "*/node_modules/*",
+  "*/.cache/*"
 ]
 
 [backup.nvim]

@@ -1,143 +1,141 @@
 # `dotback`
 
-`dotback` backs up your dotfiles.
+`dotback` is a small CLI that backs up dotfiles by copying files/directories defined in a TOML config.
 
-<!-- TOC start (generated with https://github.com/derlin/bitdowntoc) -->
+## Features
 
-- [`dotback`](#dotback)
-   * [Features](#features)
-   * [Configuration](#configuration)
-   * [Usage](#usage)
-      + [Backup](#backup)
-   * [Unix philosophy](#unix-philosophy)
-   * [It does not](#it-does-not)
-   * [It does](#it-does)
-   * [Installation](#installation)
-   * [Contribution](#contribution)
+- Single static binary, no runtime environment required.
+- Focused scope: backup only.
+- Plain copy workflow (no symlink management, no restore workflow).
+- Optional post-backup commands (`after-backup`).
 
-<!-- TOC end -->
+## Installation
 
-# Features
+Download a release binary from [releases](https://github.com/pspiagicw/dotback/releases), or install with Go:
 
-- A single binary, no runtime environments or large dependencies.
-- Designed with Unix philosophy, it only does backup.
-- No symlinks, only simple copying.
-
-# Installation
-
-You can download the binary from the [releases](https://github.com/pspiagicw/dotback/releases) section.
-
-If you have the `Go` compiler installed, you can also install it using the following command.
-
-```sh {linenos=false}
-go install github.com/pspiagicw/gox@latest
+```sh
+go install github.com/pspiagicw/dotback@latest
 ```
 
-If you use [`gox`](https://github.com/pspiagicw/gox) to manage your go binaries, you can run.
+If you use [`gox`](https://github.com/pspiagicw/gox):
 
-```sh {linenos=false}
-gox install github.com/pspiagicw/gox@latest
+```sh
+gox install github.com/pspiagicw/dotback@latest
 ```
 
-# Configuration
+## Configuration
 
-It tries to find the default configuration in `$XDG_CONFIG_HOME/dotback/backup.toml`.
-- It should have a `storeDir` variable defined. 
-- It can optionally provide a `after-backup` list of commands to run.
+Default config path:
 
-> [!NOTE]
-> You can also run `dotback --example-config` to get an example config file.
+- `$XDG_CONFIG_HOME/dotback/backup.toml` (typically `~/.config/dotback/backup.toml`)
+
+You can print a starter config:
+
+```sh
+dotback --example-config
+```
+
+You can inspect loaded config values:
+
+```sh
+dotback config
+```
+
+### Config schema
+
+- `storeDir` (required): destination root for backups. Created if missing.
+- `[backup.<name>]` (required): each rule must include:
+- `location` (required): file or directory to copy.
+- `after-backup` (optional): commands to run after backup completes.
+- `ignore` (optional): glob patterns used to skip paths during copy.
+
+Example:
 
 ```toml
-
-# A folder to store the backup, it will be created if it does not exist.
 storeDir = "~/.local/state/backup"
 
-# All commands should be defined by the user.
-# It can be left empty or omitted.
-
 after-backup = [
-    "scp -r ...",
-    "rsync ....",
-    "tar -xvzf ..."
+  "tar -czf ~/.local/state/backup.tgz ~/.local/state/backup"
 ]
 
+ignore = [
+  "*/node_modules/*",
+  "*/.cache/*"
+]
 
-# A backup rule has [backup.<rule-name>] format.
-# It should contain a `location` parameter.
 [backup.nvim]
 location = "~/.config/nvim"
 
-[backup.neomutt]
-location = "~/.config/neomutt"
-
-# Backup location can also be a file.
 [backup.gitconfig]
 location = "~/.gitconfig"
-
 ```
 
-> [!NOTE]
-> You can run `dotback config` to get info about the current config.
+More examples: `backup.example.toml`.
 
 ![config](./gifs/config.gif)
 
-# Usage
+## Usage
 
-## `flags`
-`dotback` provides the following flags.
-- `--config` : Path to a alternate config file. (Should be absolute path)
-- `--example-config` : Print an example config file.
+Global flags:
 
-### `backup`
+- `--config`: alternate config file path.
+- `--example-config`: print an example config and exit.
 
-Simply run `dotback backup` to backup configured in the config file. 
-- It would backup everything to `storeDir`.
-- This ignores `.git` and `.gitignore` files within any backup folder.
+### Backup command
 
-![demo](./gifs/backup.gif)
+Back up all configured rules:
 
-- You can also specify selective rules for backup. 
-
-```sh {linenos=false}
-# Only backup neovim config
-dotback backup nvim
+```sh
+dotback backup
 ```
 
-- You can also provide `--ignore` flag to ignore selective rules for backup.
+Back up selected rules:
 
-```sh {linenos=false}
-# Backup everything except neovim and neomutt
+```sh
+dotback backup nvim gitconfig
+```
+
+Back up all except selected rules:
+
+```sh
 dotback backup --ignore nvim neomutt
 ```
 
-![ignore](./gifs/ignore.gif)
+Show planned operations without copying:
 
-- You can provide `--dry-run` flag to not actually backup anything.
-
-```sh {linenos=false}
-# Don't actually backup anything
+```sh
 dotback backup --dry-run
 ```
-# Unix philosophy
 
-`dotback` is not a full fledged backup solution for your dotfiles. It is a simple tool with a simple use.
+Use an alternate config:
 
-## `it does not`
-- Provide incremental backup (Use rsync or borg)
-- Provide automatic backup (Use systemd or cron for that) 
-- Sync with different machines (Use syncthing for that)
-- Install your dotfiles on a new machine.
+```sh
+dotback --config /absolute/path/to/backup.toml backup
+```
 
-## `it does`
-- Copy the file or folder into the `storeDir`.
-- Provide ability to run scripts before and after running the backups.
+Notes:
 
-You can see the backup.yml example file(in the repo) for more reference.
+- `dotback backup` asks for confirmation before starting.
+- If `after-backup` is configured, `dotback` asks before running those commands.
+- `.git` directories are always skipped during directory copy.
+- `.gitignore` files are not automatically skipped unless you add matching `ignore` patterns.
 
-# Contribution
+![demo](./gifs/backup.gif)
+![ignore](./gifs/ignore.gif)
 
-It is a very highly opinated tool. It does not fit in everybody's workflow.
-But if it does, please do share your support and love.
+## Limitations
 
-Anybody is welcome to contribute and extend this project on [GitHub](https://github.com/pspiagicw/dotback).
+- Not incremental/versioned backup.
+- Not scheduling/automation (use cron/systemd).
+- Not sync/replication across machines (use rsync/syncthing/etc.).
+- Not a restore/installer tool.
+- Rule targets with the same basename can overwrite each other in `storeDir` because destination uses the source basename.
+
+## Safety notes
+
+- If you include sensitive paths (for example `~/.ssh`, `~/.gnupg`, password stores), secure `storeDir` with strict permissions.
+- If you copy backups to remote storage in `after-backup`, ensure transport and destination are encrypted/protected.
+
+## Contribution
+
+Contributions are welcome on [GitHub](https://github.com/pspiagicw/dotback).
