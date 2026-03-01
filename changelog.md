@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added --config option
 - Added --example-config option.
 - Added --ignore option to backup subcommand.
+- Added `install.sh` to install `dotback` into `/usr/local/bin` or `~/.local/bin`.
 - Parse config and backup files accordingly
 - Run after-backup procedure.
 - Add selective backups
