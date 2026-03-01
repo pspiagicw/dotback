@@ -16,6 +16,7 @@ var handlers map[string]func(*argparse.Opts) = map[string]func(*argparse.Opts){
 	},
 	"backup": backup.Backup,
 	"config": config.PrintConfig,
+	"list":   config.ListRules,
 	"help": func(opts *argparse.Opts) {
 		help.Handle(opts.Args, opts.Version)
 	},

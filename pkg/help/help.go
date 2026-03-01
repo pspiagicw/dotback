@@ -36,7 +36,7 @@ func PrintVersion(version string) {
 }
 func printHeader() {
 	pelp.Print("Backup dotfiles the simple way!")
-	pelp.HeaderWithDescription("usage", []string{"dotback [command] [args]"})
+	pelp.HeaderWithDescription("usage", []string{"dotback [global-flags] <command> [args]"})
 }
 
 func PrintHelp(version string) {
@@ -58,11 +58,11 @@ func printFlags() {
 }
 
 func printFooter() {
-	pelp.HeaderWithDescription("more help", []string{"Use 'dotback help [command]' for more info about a command."})
+	pelp.HeaderWithDescription("more help", []string{"Use 'dotback help <command>' for more info about a command."})
 }
 func printCommands() {
-	commands := []string{"backup:", "version:", "config:", "help:"}
-	messages := []string{"Backup your dotfiles", "Show version info", "Print the current config", "Show this message"}
+	commands := []string{"backup:", "version:", "config:", "list:", "help:"}
+	messages := []string{"Backup your dotfiles", "Show version info", "Print the current config", "List configured backup rules", "Show this message"}
 	pelp.Aligned("commands", commands, messages)
 }
 func Handle(args []string, version string) {
@@ -75,6 +75,7 @@ func Handle(args []string, version string) {
 	handlers := map[string]func(){
 		"backup": HelpBackup,
 		"config": HelpConfig,
+		"list":   HelpList,
 		"version": func() {
 			PrintVersion(version)
 		},

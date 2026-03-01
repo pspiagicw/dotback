@@ -3,6 +3,7 @@ package config
 import (
 	"flag"
 	"fmt"
+	"sort"
 
 	"github.com/pspiagicw/dotback/pkg/argparse"
 	"github.com/pspiagicw/dotback/pkg/help"
@@ -42,7 +43,25 @@ func printRules(config *Config) {
 	for name, rule := range config.Rules {
 		rows = append(rows, []string{name, rule.Location})
 	}
+	sort.Slice(rows, func(i, j int) bool {
+		return rows[i][0] < rows[j][0]
+	})
 
 	goreland.LogTable(headers, rows)
 
+}
+
+func ListRules(opts *argparse.Opts) {
+	parseConfigArgs(opts)
+	config := NewConfig(opts)
+
+	names := []string{}
+	for name := range config.Rules {
+		names = append(names, name)
+	}
+	sort.Strings(names)
+
+	for _, name := range names {
+		fmt.Println(name)
+	}
 }

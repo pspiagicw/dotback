@@ -15,10 +15,10 @@ import (
 
 func parseBackupOpts(opts *argparse.Opts) {
 
-	flag := flag.NewFlagSet("groom backup", flag.ExitOnError)
+	flag := flag.NewFlagSet("dotback backup", flag.ExitOnError)
 
-	flag.BoolVar(&opts.DryRun, "dry-run", false, "Dry run the backup")
-	flag.BoolVar(&opts.Ignore, "ignore", false, "Ignore the backup")
+	flag.BoolVar(&opts.DryRun, "dry-run", false, "Preview backup operations without writing files")
+	flag.BoolVar(&opts.Ignore, "ignore", false, "Treat provided rule names as exclusions")
 	flag.BoolVar(&opts.Yes, "yes", false, "Skip confirmation prompts")
 	flag.BoolVar(&opts.NonInteractive, "non-interactive", false, "Run without interactive prompts")
 	flag.BoolVar(&opts.NoAfterBackup, "no-after-backup", false, "Skip running after-backup commands")

@@ -113,12 +113,24 @@ Use an alternate config:
 dotback --config /absolute/path/to/backup.toml backup
 ```
 
+Run without interactive prompts (CI/cron):
+
+```sh
+dotback backup --non-interactive --no-after-backup
+```
+
+List configured backup rule names:
+
+```sh
+dotback list
+```
+
 Notes:
 
 - `dotback backup` asks for confirmation before starting.
 - If `after-backup` is configured, `dotback` asks before running those commands.
 - `.git` directories are always skipped during directory copy.
-- `.gitignore` files are not automatically skipped unless you add matching `ignore` patterns.
+- `.gitignore` files are skipped during copy.
 
 ![demo](./gifs/backup.gif)
 ![ignore](./gifs/ignore.gif)
