@@ -18,6 +18,9 @@ func parseBackupOpts(opts *argparse.Opts) {
 
 	flag.BoolVar(&opts.DryRun, "dry-run", false, "Dry run the backup")
 	flag.BoolVar(&opts.Ignore, "ignore", false, "Ignore the backup")
+	flag.BoolVar(&opts.Yes, "yes", false, "Skip confirmation prompts")
+	flag.BoolVar(&opts.NonInteractive, "non-interactive", false, "Run without interactive prompts")
+	flag.BoolVar(&opts.NoAfterBackup, "no-after-backup", false, "Skip running after-backup commands")
 
 	flag.Usage = help.HelpBackup
 	flag.Parse(opts.Args)
@@ -50,7 +53,7 @@ func postBackup(configFile *config.Config, opts *argparse.Opts) {
 
 func getConfig(opts *argparse.Opts) *config.Config {
 	configFile := config.NewConfig(opts)
-	confirmBackup()
+	confirmBackup(opts)
 	ensureStorePath(configFile)
 	return configFile
 }
@@ -59,7 +62,14 @@ func ensureStorePath(configFile *config.Config) {
 	goreland.LogInfo("Starting backup at %s", storePath)
 	createIfNotExist(storePath)
 }
-func confirmBackup() {
+func isNonInteractive(opts *argparse.Opts) bool {
+	return opts.Yes || opts.NonInteractive
+}
+func confirmBackup(opts *argparse.Opts) {
+	if isNonInteractive(opts) {
+		goreland.LogInfo("Skipping backup confirmation prompt")
+		return
+	}
 	confirm := false
 	prompt := &survey.Confirm{
 		Message: "Do you want to start the backup ?",
@@ -140,7 +150,11 @@ func backupAll(configFile *config.Config, opt *argparse.Opts) {
 		executeRule(configFile, name, opt)
 	}
 }
-func confirmAfterBackUp() {
+func confirmAfterBackUp(opts *argparse.Opts) {
+	if isNonInteractive(opts) {
+		goreland.LogInfo("Skipping after-backup confirmation prompt")
+		return
+	}
 	confirm := false
 	prompt := survey.Confirm{
 		Message: "Run the after-backup procedure ?",
@@ -156,7 +170,15 @@ func runAfterBackup(configfile *config.Config, opts *argparse.Opts) {
 		goreland.LogInfo("DRY RUN: Run after-backup commands.")
 		return
 	}
-	confirmAfterBackUp()
+	if opts.NoAfterBackup {
+		goreland.LogInfo("Skipping after-backup commands (--no-after-backup)")
+		return
+	}
+	if len(configfile.AfterBackup) == 0 {
+		return
+	}
+
+	confirmAfterBackUp(opts)
 
 	for _, cmd := range configfile.AfterBackup {
 

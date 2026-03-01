@@ -15,8 +15,11 @@ type Opts struct {
 	Config string
 
 	// Backup options
-	DryRun bool
-	Ignore bool
+	DryRun         bool
+	Ignore         bool
+	Yes            bool
+	NonInteractive bool
+	NoAfterBackup  bool
 }
 
 func ParseArguments(version string) *Opts {

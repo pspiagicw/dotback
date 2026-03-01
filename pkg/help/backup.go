@@ -8,10 +8,20 @@ func HelpBackup() {
 	pelp.Print("Backup dotfiles")
 	pelp.HeaderWithDescription("usage", []string{"dotback [flags] backup <rules>"})
 
-	pelp.Flags("flags", []string{"dry-run", "ignore"}, []string{"Dry run the backup.( Don't execute any disk operations)", "Ignore these backup rules (Backup everything other than these)"})
+	pelp.Flags(
+		"flags",
+		[]string{"dry-run", "ignore", "yes", "non-interactive", "no-after-backup"},
+		[]string{
+			"Dry run the backup.( Don't execute any disk operations)",
+			"Ignore these backup rules (Backup everything other than these)",
+			"Skip confirmation prompts",
+			"Run without interactive prompts",
+			"Skip running after-backup commands",
+		},
+	)
 
 	pelp.HeaderWithDescription("arguments", []string{"The rules to execute.", "- If empty, backup everything."})
-	pelp.Examples("examples", []string{"dotback backup", "dotback backup nvim emacs micro", "dotback --dry-run backup"})
+	pelp.Examples("examples", []string{"dotback backup", "dotback backup nvim emacs micro", "dotback backup --dry-run", "dotback backup --yes --no-after-backup"})
 }
 func HelpConfig() {
 	pelp.Print("Show config info")
