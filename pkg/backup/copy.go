@@ -24,6 +24,9 @@ func generateSkipFunc(ignore []string) func(srcinfo fs.FileInfo, src string, des
 		if srcinfo.IsDir() && filepath.Base(src) == ".git" {
 			return true, nil
 		}
+		if filepath.Base(src) == ".gitignore" {
+			return true, nil
+		}
 		for _, pattern := range ignore {
 			match, err := filepath.Match(pattern, src)
 			if err != nil {
@@ -39,6 +42,9 @@ func generateSkipFunc(ignore []string) func(srcinfo fs.FileInfo, src string, des
 
 func SkipFunc(srcinfo fs.FileInfo, src string, dest string) (bool, error) {
 	if srcinfo.IsDir() && filepath.Base(src) == ".git" {
+		return true, nil
+	}
+	if filepath.Base(src) == ".gitignore" {
 		return true, nil
 	}
 	return false, nil
