@@ -36,11 +36,14 @@ func readConfigFile(filepath string) []byte {
 	}
 	return contents
 }
-func assertConfigFile() {
-	_, err := os.Stat(getConfigPath())
+func assertConfigFile(path string) {
+	_, err := os.Stat(path)
 	if errors.Is(err, fs.ErrNotExist) {
-		goreland.LogError("The config file '%s' doesn't seem to exist. Create a config to get started", getConfigPath())
+		goreland.LogError("The config file '%s' doesn't seem to exist. Create a config to get started", path)
 		goreland.LogFatal("Run dotback help config for more information.")
+	}
+	if err != nil {
+		goreland.LogFatal("Error accessing config file '%s': %v", path, err)
 	}
 }
 func NewConfig(opts *argparse.Opts) *Config {
@@ -51,6 +54,7 @@ func NewConfig(opts *argparse.Opts) *Config {
 		path = opts.Config
 	}
 
+	assertConfigFile(path)
 	config := newFromFile(path)
 
 	return config
@@ -60,7 +64,9 @@ func newFromFile(path string) *Config {
 	contents := readConfigFile(path)
 	d := toml.NewDecoder(bytes.NewReader(contents))
 	config := new(Config)
-	d.Decode(config)
+	if _, err := d.Decode(config); err != nil {
+		goreland.LogFatal("Error parsing config file '%s': %v", path, err)
+	}
 
 	checkConfig(config)
 	return config
