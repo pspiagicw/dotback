@@ -31,3 +31,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added `list` command to print configured backup rule names.
 - Standardized help usage text and backup flag descriptions.
 - Sorted displayed backup rules in `dotback config`.
+- Installer updates:
+- `install.sh` now installs prebuilt release binaries (no local clone/build required).
+- Supports optional `VERSION=<tag>` pinning during install.

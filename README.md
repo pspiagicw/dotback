@@ -17,13 +17,18 @@ Download a release binary from [releases](https://github.com/pspiagicw/dotback/r
 go install github.com/pspiagicw/dotback@latest
 ```
 
-If you already have a local `./dotback` binary in the project root:
+Install directly from GitHub releases (fresh system, no clone/build required):
 
 ```sh
-./install.sh
+curl -fsSL https://raw.githubusercontent.com/pspiagicw/dotback/main/install.sh | bash
 ```
 
 The installer places `dotback` in `/usr/local/bin` when writable, otherwise `~/.local/bin`.
+You can also pin a release tag:
+
+```sh
+curl -fsSL https://raw.githubusercontent.com/pspiagicw/dotback/main/install.sh | VERSION=v0.1.0 bash
+```
 
 If you use [`gox`](https://github.com/pspiagicw/gox):
 
