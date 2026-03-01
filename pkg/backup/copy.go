@@ -11,13 +11,10 @@ import (
 	"github.com/pspiagicw/goreland"
 )
 
-func performCopy(src string, dest string, ignore []string) {
-	err := cp.Copy(src, dest, cp.Options{
+func performCopy(src string, dest string, ignore []string) error {
+	return cp.Copy(src, dest, cp.Options{
 		Skip: generateSkipFunc(ignore),
 	})
-	if err != nil {
-		goreland.LogError("Error copying %s: %v", src, err)
-	}
 }
 func generateSkipFunc(ignore []string) func(srcinfo fs.FileInfo, src string, dest string) (bool, error) {
 	return func(srcinfo fs.FileInfo, src string, dest string) (bool, error) {

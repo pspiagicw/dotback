@@ -1,6 +1,7 @@
 package backup
 
 import (
+	"fmt"
 	"flag"
 	"path/filepath"
 
@@ -33,22 +34,23 @@ func Backup(opts *argparse.Opts) {
 	parseBackupOpts(opts)
 	configFile := getConfig(opts)
 
-	executeBackup(configFile, opts)
-	postBackup(configFile, opts)
-}
-
-func executeBackup(configFile *config.Config, opts *argparse.Opts) {
-	if len(opts.Args) != 0 {
-		backupSelective(configFile, opts)
-	} else {
-		backupAll(configFile, opts)
-	}
-}
-
-func postBackup(configFile *config.Config, opts *argparse.Opts) {
+	failures := executeBackup(configFile, opts)
 	goreland.LogInfo("Backup complete!")
-	runAfterBackup(configFile, opts)
+	failures = append(failures, runAfterBackup(configFile, opts)...)
+	if len(failures) != 0 {
+		for _, failure := range failures {
+			goreland.LogError("%s", failure)
+		}
+		goreland.LogFatal("Backup finished with %d failure(s)", len(failures))
+	}
 	goreland.LogSuccess("Backup successful!")
+}
+
+func executeBackup(configFile *config.Config, opts *argparse.Opts) []string {
+	if len(opts.Args) != 0 {
+		return backupSelective(configFile, opts)
+	}
+	return backupAll(configFile, opts)
 }
 
 func getConfig(opts *argparse.Opts) *config.Config {
@@ -80,22 +82,25 @@ func confirmBackup(opts *argparse.Opts) {
 	}
 
 }
-func backupSelective(configFile *config.Config, opts *argparse.Opts) {
+func backupSelective(configFile *config.Config, opts *argparse.Opts) []string {
 	if opts.Ignore {
-		ignoreRules(configFile, opts)
-	} else {
-		executeSelectiveBackup(configFile, opts)
+		return ignoreRules(configFile, opts)
 	}
+	return executeSelectiveBackup(configFile, opts)
 }
-func ignoreRules(configFile *config.Config, opts *argparse.Opts) {
+func ignoreRules(configFile *config.Config, opts *argparse.Opts) []string {
 	ignoredRules := opts.Args
+	failures := []string{}
 	for name, _ := range configFile.Rules {
 		if !contains(ignoredRules, name) {
-			executeRule(configFile, name, opts)
+			if err := executeRule(configFile, name, opts); err != nil {
+				failures = append(failures, err.Error())
+			}
 		} else {
 			goreland.LogInfo("Ignoring the [%s] backup", name)
 		}
 	}
+	return failures
 }
 func contains(rules []string, name string) bool {
 	for _, rule := range rules {
@@ -105,10 +110,14 @@ func contains(rules []string, name string) bool {
 	}
 	return false
 }
-func executeSelectiveBackup(configFile *config.Config, opts *argparse.Opts) {
+func executeSelectiveBackup(configFile *config.Config, opts *argparse.Opts) []string {
+	failures := []string{}
 	for _, name := range opts.Args {
-		executeRule(configFile, name, opts)
+		if err := executeRule(configFile, name, opts); err != nil {
+			failures = append(failures, err.Error())
+		}
 	}
+	return failures
 }
 
 func getRule(name string, configFile *config.Config) *config.BackupRule {
@@ -121,7 +130,7 @@ func getRule(name string, configFile *config.Config) *config.BackupRule {
 	return rule
 
 }
-func executeRule(configFile *config.Config, name string, opts *argparse.Opts) {
+func executeRule(configFile *config.Config, name string, opts *argparse.Opts) error {
 
 	rule := getRule(name, configFile)
 
@@ -130,10 +139,13 @@ func executeRule(configFile *config.Config, name string, opts *argparse.Opts) {
 	src, dest := getPath(configFile, rule)
 
 	if !opts.DryRun {
-		performCopy(src, dest, configFile.Ignore)
+		if err := performCopy(src, dest, configFile.Ignore); err != nil {
+			return fmt.Errorf("failed rule [%s]: copy %s -> %s: %w", name, src, dest, err)
+		}
 	} else {
 		goreland.LogInfo("Move %s -> %s", src, dest)
 	}
+	return nil
 }
 func getPath(configFile *config.Config, rule *config.BackupRule) (string, string) {
 	storeDir := expandHome(configFile.StoreDir)
@@ -141,14 +153,18 @@ func getPath(configFile *config.Config, rule *config.BackupRule) (string, string
 	dest := filepath.Join(storeDir, filepath.Base(src))
 	return src, dest
 }
-func backupAll(configFile *config.Config, opt *argparse.Opts) {
+func backupAll(configFile *config.Config, opt *argparse.Opts) []string {
 	if opt.Ignore {
 		goreland.LogFatal("Can't ignore all rules")
 	}
 
+	failures := []string{}
 	for name, _ := range configFile.Rules {
-		executeRule(configFile, name, opt)
+		if err := executeRule(configFile, name, opt); err != nil {
+			failures = append(failures, err.Error())
+		}
 	}
+	return failures
 }
 func confirmAfterBackUp(opts *argparse.Opts) {
 	if isNonInteractive(opts) {
@@ -164,34 +180,41 @@ func confirmAfterBackUp(opts *argparse.Opts) {
 		goreland.LogFatal("User cancelled the after-backup procedure")
 	}
 }
-func runAfterBackup(configfile *config.Config, opts *argparse.Opts) {
+func runAfterBackup(configfile *config.Config, opts *argparse.Opts) []string {
 
 	if opts.DryRun {
 		goreland.LogInfo("DRY RUN: Run after-backup commands.")
-		return
+		return nil
 	}
 	if opts.NoAfterBackup {
 		goreland.LogInfo("Skipping after-backup commands (--no-after-backup)")
-		return
+		return nil
 	}
 	if len(configfile.AfterBackup) == 0 {
-		return
+		return nil
 	}
 
 	confirmAfterBackUp(opts)
+	failures := []string{}
 
 	for _, cmd := range configfile.AfterBackup {
 
 		args, err := shellquote.Split(cmd)
 
 		if err != nil {
-			goreland.LogFatal("Failed to parse command '%s':%v", cmd, err)
+			failures = append(failures, fmt.Sprintf("failed to parse after-backup command '%s': %v", cmd, err))
+			continue
+		}
+		if len(args) == 0 {
+			failures = append(failures, "empty after-backup command")
+			continue
 		}
 
 		goreland.LogExec(cmd)
 		err = goreland.Execute(args[0], args[1:], []string{})
 		if err != nil {
-			goreland.LogFatal("Error executing: %v", err)
+			failures = append(failures, fmt.Sprintf("failed to execute after-backup command '%s': %v", cmd, err))
 		}
 	}
+	return failures
 }
