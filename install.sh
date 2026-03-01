@@ -43,6 +43,18 @@ fetch() {
   fi
 }
 
+asset_filename_from_url() {
+  local url="$1"
+  local no_query="${url%%\?*}"
+  local base
+  base="$(basename "${no_query}")"
+  if [[ -z "${base}" || "${base}" == "/" || "${base}" == "." ]]; then
+    echo "asset"
+    return
+  fi
+  echo "${base}"
+}
+
 detect_os() {
   case "$(uname -s | tr '[:upper:]' '[:lower:]')" in
     linux*) echo "linux" ;;
@@ -110,7 +122,7 @@ select_asset_url() {
 extract_binary() {
   local asset_path="$1"
   local binary_path=""
-  case "${asset_path}" in
+  case "${asset_path,,}" in
     *.tar.gz|*.tgz)
       require_cmd tar
       tar -xzf "${asset_path}" -C "${TMP_DIR}"
@@ -124,6 +136,16 @@ extract_binary() {
       binary_path="${asset_path}"
       ;;
   esac
+
+  if [[ -z "${binary_path}" ]]; then
+    if tar -tzf "${asset_path}" >/dev/null 2>&1; then
+      require_cmd tar
+      tar -xzf "${asset_path}" -C "${TMP_DIR}"
+    elif unzip -tqq "${asset_path}" >/dev/null 2>&1; then
+      require_cmd unzip
+      unzip -q "${asset_path}" -d "${TMP_DIR}"
+    fi
+  fi
 
   if [[ -z "${binary_path}" ]]; then
     binary_path="$(find "${TMP_DIR}" -type f -name "${BINARY_NAME}" | head -n 1 || true)"
@@ -148,7 +170,8 @@ else
 fi
 
 ASSET_URL="$(select_asset_url "$(latest_release_api)")"
-ASSET_FILE="${TMP_DIR}/asset"
+ASSET_NAME="$(asset_filename_from_url "${ASSET_URL}")"
+ASSET_FILE="${TMP_DIR}/${ASSET_NAME}"
 
 echo "downloading ${REPO} (${VERSION}) for ${OS}/${ARCH}"
 fetch "${ASSET_URL}" "${ASSET_FILE}"
