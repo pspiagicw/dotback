@@ -50,12 +50,12 @@ func (b *BackupCMD) Run(opts *Opts) error {
 	return nil
 }
 
-type ConfigInitCMD struct {
+type ConfigDefaultCMD struct {
 }
 
-func (c *ConfigInitCMD) Run(opts *Opts) error {
+func (c *ConfigDefaultCMD) Run(opts *Opts) error {
 	// config.Init(opts.ConfigPath)
-	fmt.Println(EXAMPLE_CONFIG)
+	fmt.Print(EXAMPLE_CONFIG)
 	return nil
 }
 
@@ -68,8 +68,8 @@ func (c *ConfigShowCMD) Run(opts *Opts) error {
 }
 
 type ConfigCMD struct {
-	Init ConfigInitCMD `cmd:"" help:"Initialize the default config."`
-	Show ConfigShowCMD `cmd:"" help:"Initialize the default config."`
+	Default ConfigDefaultCMD `cmd:"" help:"Initialize the default config."`
+	Show    ConfigShowCMD    `cmd:"" help:"Initialize the default config."`
 }
 
 type VersionCMD struct {
