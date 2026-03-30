@@ -1,10 +1,11 @@
 package argparse
 
 import (
+	"fmt"
+
 	"github.com/alecthomas/kong"
 	"github.com/pspiagicw/dotback/backup"
 	"github.com/pspiagicw/dotback/config"
-	"github.com/pspiagicw/pelp"
 )
 
 const EXAMPLE_CONFIG = `
@@ -48,28 +49,33 @@ func (b *BackupCMD) Run(opts *Opts) error {
 	return nil
 }
 
-type ConfigCMD struct {
+type ConfigInitCMD struct {
 }
 
-func (c *ConfigCMD) Run(opts *Opts) error {
+func (c *ConfigInitCMD) Run(opts *Opts) error {
+	// config.Init(opts.ConfigPath)
+	fmt.Println(EXAMPLE_CONFIG)
+	return nil
+}
+
+type ConfigShowCMD struct {
+}
+
+func (c *ConfigShowCMD) Run(opts *Opts) error {
 	config.PrintConfig(opts.ConfigPath)
 	return nil
 }
 
-type ExampleConfigCMD struct {
-}
-
-func (e *ExampleConfigCMD) Run(opts *Opts) error {
-	pelp.Print(EXAMPLE_CONFIG)
-	return nil
+type ConfigCMD struct {
+	Init ConfigInitCMD `cmd:"" help:"Initialize the default config."`
+	Show ConfigShowCMD `cmd:"" help:"Initialize the default config."`
 }
 
 var CLI struct {
 	ConfigPath string `help:"Alternate config file"`
 
-	Backup        BackupCMD        `cmd:"" help:"Backup your dotfiles!"`
-	Config        ConfigCMD        `cmd:"" help:"Print the current config."`
-	ExampleConfig ExampleConfigCMD `cmd:"" help:"Print the example config."`
+	Backup BackupCMD `cmd:"" help:"Backup your dotfiles!"`
+	Config ConfigCMD `cmd:"" help:"Print the current config."`
 }
 
 func ParseArguments(version string) *kong.Context {
