@@ -36,6 +36,7 @@ location = "~/.gitconfig"
 
 type Opts struct {
 	ConfigPath string
+	Version    string
 }
 
 type BackupCMD struct {
@@ -71,16 +72,25 @@ type ConfigCMD struct {
 	Show ConfigShowCMD `cmd:"" help:"Initialize the default config."`
 }
 
+type VersionCMD struct {
+}
+
+func (v *VersionCMD) Run(opts *Opts) error {
+	fmt.Printf("dotback version: %s\n", opts.Version)
+	return nil
+}
+
 var CLI struct {
 	ConfigPath string `help:"Alternate config file"`
 
-	Backup BackupCMD `cmd:"" help:"Backup your dotfiles!"`
-	Config ConfigCMD `cmd:"" help:"Print the current config."`
+	Backup  BackupCMD  `cmd:"" help:"Backup your dotfiles!"`
+	Config  ConfigCMD  `cmd:"" help:"Print the current config."`
+	Version VersionCMD `cmd:"" help:"Print version info"`
 }
 
 func ParseArguments(version string) *kong.Context {
 
 	ctx := kong.Parse(&CLI)
-	ctx.Run(&Opts{CLI.ConfigPath})
+	ctx.Run(&Opts{CLI.ConfigPath, version})
 	return ctx
 }

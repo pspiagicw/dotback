@@ -7,8 +7,5 @@ import (
 var VERSION string = "unversioned"
 
 func main() {
-	// opts := argparse.ParseArguments(VERSION)
-	// handler.Handle(opts)
 	argparse.ParseArguments(VERSION)
-	// handler.Handle(ctx)
 }
