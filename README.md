@@ -1,6 +1,6 @@
 # `dotback`
 
-`dotback` is a small CLI that backs up dotfiles by copying files/directories defined in a TOML config.
+`dotback` is a CLI that backs up dotfiles by copying files/directories defined in a TOML config.
 
 ## Features
 
